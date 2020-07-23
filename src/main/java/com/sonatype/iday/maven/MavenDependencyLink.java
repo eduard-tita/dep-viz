@@ -1,5 +1,7 @@
 package com.sonatype.iday.maven;
 
+import java.util.Objects;
+
 public class MavenDependencyLink
 {
   private final MavenComponent source;
@@ -16,6 +18,24 @@ public class MavenDependencyLink
 
   public MavenComponent getTarget() {
     return target;
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    MavenDependencyLink that = (MavenDependencyLink) o;
+    return Objects.equals(source, that.source) &&
+        Objects.equals(target, that.target);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(source, target);
   }
 
   @Override

@@ -1,5 +1,7 @@
 package com.sonatype.iday.maven;
 
+import java.util.Objects;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class SemVer
@@ -38,6 +40,23 @@ public class SemVer
       return StringUtils.leftPad(parts[index], 10, "0");
     }
     return "0000000000";
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    SemVer semVer = (SemVer) o;
+    return Objects.equals(version, semVer.version);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(version);
   }
 
   @Override

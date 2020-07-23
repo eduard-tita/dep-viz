@@ -23,14 +23,14 @@ public class MavenRunner
 
   String[] envArray;
 
-  public MavenRunner(final String mavemHome) {
+  public MavenRunner(final String mavenHome) {
     String mvnExec;
-    if (mavemHome.endsWith("/")) {
-      mvnExec = mavemHome + "bin/mvn";
+    if (mavenHome.endsWith("/")) {
+      mvnExec = mavenHome + "bin/mvn";
     } else {
-      mvnExec = mavemHome + "/bin/mvn";
+      mvnExec = mavenHome + "/bin/mvn";
     }
-    mvnCmd = mvnExec + " dependency:tree -Dscope=compile -Dincludes=com.sonatype.*";
+    mvnCmd = mvnExec + " dependency:tree -Dscope=compile -Dincludes=com.sonatype.*,org.sonatype.*";
   }
 
   String[] getEnv() {
@@ -58,7 +58,7 @@ public class MavenRunner
     }
   }
 
-  private static Pattern SONATYPE_PATTERN = Pattern.compile("[^<]*com\\.sonatype\\..+");
+  private static Pattern SONATYPE_PATTERN = Pattern.compile("[-+ \\\\|]*(com|org)\\.sonatype\\..+");
 
   private static void processOutput(Process process, Set<MavenDependencyLink> linkSet) throws IOException {
     String[] stack = new String[64];
@@ -66,12 +66,13 @@ public class MavenRunner
     try (BufferedReader output = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
       String line = output.readLine();
       while (line != null) {
+        //log.debug(line);
         // strip [INFO]
         line = line.substring(7);
 
         Matcher matcher = SONATYPE_PATTERN.matcher(line);
         if (matcher.matches()) {
-          if (line.startsWith("com.sonatype.")) {
+          if (line.startsWith("com.sonatype.") || line.startsWith("org.sonatype.")) {
             stack[0] = line;
           }
           else {
@@ -83,6 +84,9 @@ public class MavenRunner
             }
             // calculate level
             index = value.indexOf("com.sonatype.");
+            if (index == -1) {
+              index = value.indexOf("org.sonatype.");
+            }
             value = value.substring(index);
             int level = index / 3;
 
@@ -93,7 +97,7 @@ public class MavenRunner
               linkSet.add(link);
             }
           }
-          log.info(line);
+          log.debug(line);
         }
         line = output.readLine();
       }

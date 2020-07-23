@@ -57,7 +57,7 @@ public class GraphGenerator
       graphNodes.add(node);
     }
     setNodeColors(clusterMap);
-    log.info("\nClusters:");
+    log.info("Clusters:");
     clusterMap.forEach( (k, v) -> log.info("{} : {}", k, v));
   }
 
@@ -88,7 +88,7 @@ public class GraphGenerator
     for (Entry<String, NavigableSet<GraphNode>> entry : clusterMap.entrySet()) {
       out.write("subgraph cluster" + count++ + " {\n");
       out.write("  label=\"" + entry.getKey() + "\";\n");
-      out.write("  node [style=filled, fillcolor=\"white\"];\n");
+      out.write("  node [style=filled, color=gray, fillcolor=\"white\"];\n");
       out.write("  style=filled;\n");
       out.write("  color=\"" + getRandomColor() + "\";\n");
       NavigableSet<GraphNode> graphNodeSet = entry.getValue().descendingSet();
