@@ -1,0 +1,13 @@
+repos:
+  - https://github.com/sonatype/nexus-dependency-management
+  - https://github.com/sonatype/nexus-scm-client
+  - https://github.com/sonatype/insight-scanner
+  - https://github.com/sonatype/insight-brain
+  - https://github.com/sonatype/nexus-java-api
+
+workDirectory: /home/eduard/tmp/dep-viz
+
+gitConfig:
+  executable: /usr/bin/git
+  username: eduard-tita
+  token: c75c1117a2db13f2cc0d5d15db12eb13b20e9397

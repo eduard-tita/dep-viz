@@ -26,9 +26,21 @@
     </dependency>
 
     <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+      <version>2.10.4</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.8.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sonatype.nexus.iq</groupId>
+      <artifactId>nexus-dependency-management</artifactId>
+      <version>1.8.0</version>
     </dependency>
   </dependencies>
 </project>

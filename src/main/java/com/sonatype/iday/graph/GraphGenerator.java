@@ -29,6 +29,9 @@ public class GraphGenerator
   private final Random random = new Random();
 
   public void generate(Set<MavenDependencyLink> linkSet, String fileName) {
+    log.info("Link set size: {}", linkSet.size());
+    linkSet.forEach(link -> log.debug("{}", link));
+
     log.info("Generating the graph...");
 
     Set<GraphNode> nodes = collectNodes(linkSet);
@@ -38,7 +41,8 @@ public class GraphGenerator
 
     try (Writer out =  new BufferedWriter(new FileWriter(fileName))) {
       out.write("digraph dependencies {\n");
-      out.write("node [fontsize=12];\n");
+      out.write("ranksep = 2;\n");
+      out.write("node [fontsize = 12];\n");
       printNodes(clusterMap, out);
       printEdges(linkSet, out);
       out.write("}\n");
@@ -57,8 +61,8 @@ public class GraphGenerator
       graphNodes.add(node);
     }
     setNodeColors(clusterMap);
-    log.info("Clusters:");
-    clusterMap.forEach( (k, v) -> log.info("{} : {}", k, v));
+    log.info("Created {} graph clusters", clusterMap.size());
+    clusterMap.forEach( (k, v) -> log.debug("{} : {}", k, v));
   }
 
   private void setNodeColors(final Map<String, NavigableSet<GraphNode>> clusterMap) {

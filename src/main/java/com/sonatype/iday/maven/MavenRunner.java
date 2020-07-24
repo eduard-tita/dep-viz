@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.google.common.base.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,18 +49,20 @@ public class MavenRunner
     return envArray;
   }
 
-  public void scanDirectory(String directory, Set<MavenDependencyLink> linkSet) {
-    log.info("Processing " + directory + " ...");
+  public void scanDirectory(File workingDir, Set<MavenDependencyLink> linkSet) {
+    Stopwatch stopwatch = Stopwatch.createStarted();
+    log.info("Processing " + workingDir + " ...");
     try {
-      File workingDir = new File(directory);
       Process process = Runtime.getRuntime().exec(mvnCmd, getEnv(), workingDir);
       processOutput(process, linkSet);
     } catch (IOException e) {
       log.error("Cannot execute mvn command", e);
     }
+    long elapsed = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+    log.info("Processed dependency tree in {}ms", elapsed);
   }
 
-  private static Pattern SONATYPE_PATTERN = Pattern.compile("[-+ \\\\|]*(com|org)\\.sonatype\\..+");
+  private static final Pattern SONATYPE_PATTERN = Pattern.compile("[-+ \\\\|]*(com|org)\\.sonatype\\..+");
 
   private static void processOutput(Process process, Set<MavenDependencyLink> linkSet) throws IOException {
     String[] stack = new String[64];

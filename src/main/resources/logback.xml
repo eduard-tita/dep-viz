@@ -7,7 +7,9 @@
     </encoder>
   </appender>
 
-  <root level="debug">
+  <logger name="org.zeroturnaround.exec" level="info" />
+
+  <root level="info">
     <appender-ref ref="CONSOLE" />
   </root>
 </configuration>
