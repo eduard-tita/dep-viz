@@ -12,6 +12,7 @@ import java.util.Set;
 import com.sonatype.iday.config.Configuration;
 import com.sonatype.iday.git.GitRunner;
 import com.sonatype.iday.graph.GraphGenerator;
+import com.sonatype.iday.graph.GraphRenderer;
 import com.sonatype.iday.maven.MavenDependencyLink;
 import com.sonatype.iday.maven.MavenRunner;
 
@@ -62,5 +63,8 @@ public class Main
 
     GraphGenerator generator = new GraphGenerator();
     generator.generate(linkSet, "dot-graph.txt");
+
+    GraphRenderer renderer = new GraphRenderer();
+    renderer.render("dot-graph.txt", "dot-graph.svg");
   }
 }

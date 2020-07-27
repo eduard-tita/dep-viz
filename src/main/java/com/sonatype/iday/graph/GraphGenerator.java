@@ -42,9 +42,9 @@ public class GraphGenerator
     try (Writer out =  new BufferedWriter(new FileWriter(fileName))) {
       out.write("digraph dependencies {\n");
       out.write("ranksep = 2;\n");
-      out.write("node [fontsize = 12];\n");
+      out.write("node [style=filled, color=gray, fillcolor=\"white\", fontsize=12];\n");
       printNodes(clusterMap, out);
-      printEdges(linkSet, out);
+      printEdges(linkSet, nodes, out);
       out.write("}\n");
 
       log.info("Done.");
@@ -92,7 +92,6 @@ public class GraphGenerator
     for (Entry<String, NavigableSet<GraphNode>> entry : clusterMap.entrySet()) {
       out.write("subgraph cluster" + count++ + " {\n");
       out.write("  label=\"" + entry.getKey() + "\";\n");
-      out.write("  node [style=filled, color=gray, fillcolor=\"white\"];\n");
       out.write("  style=filled;\n");
       out.write("  color=\"" + getRandomColor() + "\";\n");
       NavigableSet<GraphNode> graphNodeSet = entry.getValue().descendingSet();
@@ -113,9 +112,14 @@ public class GraphGenerator
     return buf.toString();
   }
 
-  private void printEdges(Set<MavenDependencyLink> linkSet, Writer out) throws IOException {
+  private void printEdges(
+      Set<MavenDependencyLink> linkSet,
+      final Set<GraphNode> nodes,
+      Writer out) throws IOException {
     for (MavenDependencyLink link : linkSet) {
-      out.write("\"" + link.getSource().getNodeId() + "\" -> \"" + link.getTarget().getNodeId() + "\";\n");
+      String fromNodeId = link.getSource().getNodeId();
+      String toNodeId = link.getTarget().getNodeId();
+      out.write("\"" + fromNodeId + "\" -> \"" + toNodeId + "\";\n");
     }
   }
 
