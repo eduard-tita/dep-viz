@@ -24,7 +24,7 @@ public class GraphGenerator
 {
   private static final Logger log = LoggerFactory.getLogger(GraphGenerator.class);
 
-  private final Set<String> seen = new HashSet<>();
+  private final Map<String, GraphNode> seen = new HashMap<>();
 
   private final Random random = new Random();
 
@@ -42,7 +42,8 @@ public class GraphGenerator
     try (Writer out =  new BufferedWriter(new FileWriter(fileName))) {
       out.write("digraph dependencies {\n");
       out.write("ranksep = 2;\n");
-      out.write("node [style=filled, color=gray, fillcolor=\"white\", fontsize=12];\n");
+      out.write("node [style=filled, color=\"#a0a0a0\", fillcolor=\"white\", fontsize=12];\n");
+      out.write("edge [color=\"#a0a0a0\"];\n");
       printNodes(clusterMap, out);
       printEdges(linkSet, nodes, out);
       out.write("}\n");
@@ -119,7 +120,11 @@ public class GraphGenerator
     for (MavenDependencyLink link : linkSet) {
       String fromNodeId = link.getSource().getNodeId();
       String toNodeId = link.getTarget().getNodeId();
-      out.write("\"" + fromNodeId + "\" -> \"" + toNodeId + "\";\n");
+      out.write("\"" + fromNodeId + "\" -> \"" + toNodeId + "\"");
+      if (link.getSourceNode().color.equals("#c00000") || link.getTargetNode().color.equals("#c00000")) {
+        out.write(" [color=\"#c00000\"]");
+      }
+      out.write(";\n");
     }
   }
 
@@ -130,18 +135,21 @@ public class GraphGenerator
       if (node != null) {
         nodes.add(node);
       }
+      link.setSourceNode(seen.get(link.getSource().getNodeId()));
       node = createNode(link.getTarget());
       if (node != null) {
         nodes.add(node);
       }
+      link.setTargetNode(seen.get(link.getTarget().getNodeId()));
     });
     return nodes;
   }
 
   GraphNode createNode(MavenComponent comp) {
-    if (!seen.contains(comp.getNodeId())) {
-      seen.add(comp.getNodeId());
-      return new GraphNode(comp);
+    if (!seen.containsKey(comp.getNodeId())) {
+      GraphNode node = new GraphNode(comp);
+      seen.put(comp.getNodeId(), node);
+      return node;
     }
     return null;
   }

@@ -2,10 +2,15 @@ package com.sonatype.iday.maven;
 
 import java.util.Objects;
 
+import com.sonatype.iday.graph.GraphNode;
+
 public class MavenDependencyLink
 {
   private final MavenComponent source;
   private final MavenComponent target;
+
+  private GraphNode sourceNode;
+  private GraphNode targetNode;
 
   MavenDependencyLink(final MavenComponent source, final MavenComponent target) {
     this.source = source;
@@ -18,6 +23,22 @@ public class MavenDependencyLink
 
   public MavenComponent getTarget() {
     return target;
+  }
+
+  public GraphNode getSourceNode() {
+    return sourceNode;
+  }
+
+  public void setSourceNode(final GraphNode sourceNode) {
+    this.sourceNode = sourceNode;
+  }
+
+  public GraphNode getTargetNode() {
+    return targetNode;
+  }
+
+  public void setTargetNode(final GraphNode targetNode) {
+    this.targetNode = targetNode;
   }
 
   @Override
