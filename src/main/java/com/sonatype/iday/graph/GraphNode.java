@@ -7,7 +7,9 @@ public class GraphNode
 {
   MavenComponent component;
 
-  String color = "#404040";
+  VersionColor color = VersionColor.DEFAULT;
+
+  GraphCluster parent;
 
   GraphNode(final MavenComponent component) {
     this.component = component;

@@ -7,11 +7,9 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.NavigableSet;
 import java.util.Random;
 import java.util.Set;
-import java.util.TreeSet;
 
 import com.sonatype.iday.maven.MavenComponent;
 import com.sonatype.iday.maven.MavenDependencyLink;
@@ -24,9 +22,15 @@ public class GraphGenerator
 {
   private static final Logger log = LoggerFactory.getLogger(GraphGenerator.class);
 
+  private final boolean ignoreSingle;
+
   private final Map<String, GraphNode> seen = new HashMap<>();
 
   private final Random random = new Random();
+
+  public GraphGenerator(final boolean ignoreSingle) {
+    this.ignoreSingle = ignoreSingle;
+  }
 
   public void generate(Set<MavenDependencyLink> linkSet, String fileName) {
     log.info("Link set size: {}", linkSet.size());
@@ -36,15 +40,15 @@ public class GraphGenerator
 
     Set<GraphNode> nodes = collectNodes(linkSet);
 
-    Map<String, NavigableSet<GraphNode>> clusterMap = new HashMap<>();
-    determineClusters(clusterMap, nodes);
+    Set<GraphCluster> clusters = new HashSet<>();
+    determineClusters(clusters, nodes);
 
     try (Writer out =  new BufferedWriter(new FileWriter(fileName))) {
       out.write("digraph dependencies {\n");
       out.write("ranksep = 2;\n");
-      out.write("node [style=filled, color=\"#a0a0a0\", fillcolor=\"white\", fontsize=12];\n");
-      out.write("edge [color=\"#a0a0a0\"];\n");
-      printNodes(clusterMap, out);
+      out.write("node [style=filled, color=\"" + VersionColor.LIGHT_GRAY.value + "\", fillcolor=\"white\", fontsize=12];\n");
+      out.write("edge [color=\"" + VersionColor.LIGHT_GRAY.value + "\"];\n");
+      printNodes(clusters, out);
       printEdges(linkSet, nodes, out);
       out.write("}\n");
 
@@ -55,21 +59,26 @@ public class GraphGenerator
     }
   }
 
-  private void determineClusters(final Map<String, NavigableSet<GraphNode>> clusterMap, final Set<GraphNode> nodes) {
+  private void determineClusters(final Set<GraphCluster> clusters, final Set<GraphNode> nodes) {
+    Map<String, GraphCluster> clusterMap = new HashMap<>();
     for (GraphNode node : nodes) {
       String artifactId = node.component.getArtifactId();
-      Set<GraphNode> graphNodes = clusterMap.computeIfAbsent(artifactId, k -> new TreeSet<>());
-      graphNodes.add(node);
+      GraphCluster cluster = clusterMap.computeIfAbsent(artifactId, GraphCluster::new);
+      cluster.addNode(node);
+      node.parent = cluster;
+      clusters.add(cluster);
     }
-    setNodeColors(clusterMap);
+    setNodeColors(clusters);
     log.info("Created {} graph clusters", clusterMap.size());
     clusterMap.forEach( (k, v) -> log.debug("{} : {}", k, v));
   }
 
-  private void setNodeColors(final Map<String, NavigableSet<GraphNode>> clusterMap) {
-    for (NavigableSet<GraphNode> nodes : clusterMap.values()) {
+  private void setNodeColors(final Set<GraphCluster> clusters) {
+    for (GraphCluster cluster : clusters) {
+      NavigableSet<GraphNode> nodes = cluster.getNodeSet();
       // determine relevant values
-      SemVer maxVersion = new SemVer("0.0.0");
+      SemVer zeroVersion = new SemVer("0.0.0");
+      SemVer maxVersion = zeroVersion;
       for (GraphNode node : nodes) {
         SemVer version = node.component.getVersion();
         if (maxVersion.compareTo(version) < 0 && !version.endsWith("-SNAPSHOT")) {
@@ -80,23 +89,27 @@ public class GraphGenerator
       for (GraphNode node : nodes) {
         SemVer version = node.component.getVersion();
         if (maxVersion.compareTo(version) == 0) {
-          node.color = "#0000c0"; // latest released version
+          node.color = VersionColor.BLUE; // latest released version
         } else if(!version.endsWith("-SNAPSHOT")) {
-          node.color = "#c00000"; // older released version
+          node.color = VersionColor.RED; // older released version
         }
       }
+      // determine if single version
+      cluster.setSingleVersion(nodes.size() == 1 && !maxVersion.equals(zeroVersion));
     }
   }
 
-  private void printNodes(Map<String, NavigableSet<GraphNode>> clusterMap, Writer out) throws IOException {
+  private void printNodes(Set<GraphCluster> clusters, Writer out) throws IOException {
     int count = 0;
-    for (Entry<String, NavigableSet<GraphNode>> entry : clusterMap.entrySet()) {
+    for (GraphCluster cluster : clusters) {
+      if (ignoreSingle && cluster.isSingleVersion()) {
+        continue;
+      }
       out.write("subgraph cluster" + count++ + " {\n");
-      out.write("  label=\"" + entry.getKey() + "\";\n");
+      out.write("  label=\"" + cluster.getId() + "\";\n");
       out.write("  style=filled;\n");
       out.write("  color=\"" + getRandomColor() + "\";\n");
-      NavigableSet<GraphNode> graphNodeSet = entry.getValue().descendingSet();
-      for (GraphNode node : graphNodeSet) {
+      for (GraphNode node : cluster.getNodeSet()) {
         out.write("  \"" + node.component.getNodeId() + "\" [label=\"" + node.component.getVersion() + "\"," +
             "fontcolor=\"" + node.color + "\"];\n");
       }
@@ -118,11 +131,16 @@ public class GraphGenerator
       final Set<GraphNode> nodes,
       Writer out) throws IOException {
     for (MavenDependencyLink link : linkSet) {
+      GraphNode sourceNode = link.getSourceNode();
+      GraphNode targetNode = link.getTargetNode();
+      if (ignoreSingle && (sourceNode.parent.isSingleVersion() || targetNode.parent.isSingleVersion())) {
+        continue;
+      }
       String fromNodeId = link.getSource().getNodeId();
       String toNodeId = link.getTarget().getNodeId();
       out.write("\"" + fromNodeId + "\" -> \"" + toNodeId + "\"");
-      if (link.getSourceNode().color.equals("#c00000") || link.getTargetNode().color.equals("#c00000")) {
-        out.write(" [color=\"#c00000\"]");
+      if (sourceNode.color == VersionColor.RED || targetNode.color == VersionColor.RED) {
+        out.write(" [color=\"" + VersionColor.RED.value + "\"]");
       }
       out.write(";\n");
     }

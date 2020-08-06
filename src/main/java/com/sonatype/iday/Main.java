@@ -1,12 +1,8 @@
 package com.sonatype.iday;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import com.sonatype.iday.config.Configuration;
@@ -24,7 +20,18 @@ public class Main
   private static final Logger log = LoggerFactory.getLogger(Main.class);
 
   public static void main(String... args) {
-    Configuration configuration = null;
+    boolean ignoreSingle = false;
+
+    if (args.length > 0) {
+      if (args[0].equals("--ignore-single")) {
+        ignoreSingle = true;
+      } else {
+        showUsage();
+        return;
+      }
+    }
+
+    Configuration configuration;
     try {
       configuration = Configuration.load();
     }
@@ -61,10 +68,20 @@ public class Main
     //dirList.add("/home/eduard/projects/insight-scanner");
     //dirList.add("/home/eduard/projects/nexus-scm-tools");
 
-    GraphGenerator generator = new GraphGenerator();
+    GraphGenerator generator = new GraphGenerator(ignoreSingle);
     generator.generate(linkSet, "dot-graph.txt");
 
     GraphRenderer renderer = new GraphRenderer();
     renderer.render("dot-graph.txt", "dot-graph.svg");
+  }
+
+  private static void showUsage() {
+    String buf =
+        "Usage: java -jar dep-viz.jar [-h] [--ignore-single]\n" +
+        "Dep-viz provides a simple way to visualize dependencies relationships between several " +
+        "interconnected projects and quickly see which ones are out of date.\n" +
+        "  -h, --help            Show this help message and exit.\n" +
+        "      --ignore-single   Ignores single graph nodes with no-SNAPSHOT version.\n";
+    System.out.println(buf);
   }
 }

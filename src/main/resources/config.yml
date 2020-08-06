@@ -1,8 +1,8 @@
 repos:
   - https://github.com/sonatype/nexus-dependency-management
   - https://github.com/sonatype/nexus-scm-client
-  - https://github.com/sonatype/insight-scanner
-  - https://github.com/sonatype/insight-brain
+#  - https://github.com/sonatype/insight-scanner
+#  - https://github.com/sonatype/insight-brain
   - https://github.com/sonatype/nexus-java-api
 
 workDirectory: /home/eduard/tmp/dep-viz
