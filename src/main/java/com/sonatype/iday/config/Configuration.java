@@ -12,7 +12,7 @@ public class Configuration
 {
   private String workDirectory;
 
-  private List<String> repos;
+  private List<GitRepo> repos;
 
   private GitConfig gitConfig;
 
@@ -38,11 +38,11 @@ public class Configuration
     this.workDirectory = workDirectory;
   }
 
-  public List<String> getRepos() {
+  public List<GitRepo> getRepos() {
     return repos;
   }
 
-  public void setRepos(final List<String> repos) {
+  public void setRepos(final List<GitRepo> repos) {
     this.repos = repos;
   }
 

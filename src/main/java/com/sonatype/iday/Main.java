@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.sonatype.iday.config.Configuration;
+import com.sonatype.iday.config.GitRepo;
 import com.sonatype.iday.git.GitRunner;
 import com.sonatype.iday.graph.GraphGenerator;
 import com.sonatype.iday.graph.GraphRenderer;
@@ -48,9 +49,10 @@ public class Main
     Set<MavenDependencyLink> linkSet = new HashSet<>();
 
     GitRunner gitRunner = new GitRunner(configuration.getGitConfig(), configuration.getWorkDirectory());
-    for (String repoUrl : configuration.getRepos()) {
+    for (GitRepo repo : configuration.getRepos()) {
+      String repoUrl = repo.getUrl();
       File dir = gitRunner.execute(repoUrl);
-      mavenRunner.scanDirectory(dir, linkSet);
+      mavenRunner.scanDirectory(dir, repo.getDirectory(), linkSet);
     }
 
     //dirList.add("/home/eduard/projects/insight-brain");

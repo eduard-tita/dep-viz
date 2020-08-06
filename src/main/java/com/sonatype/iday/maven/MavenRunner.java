@@ -49,11 +49,15 @@ public class MavenRunner
     return envArray;
   }
 
-  public void scanDirectory(File workingDir, Set<MavenDependencyLink> linkSet) {
+  public void scanDirectory(File workingDir, final String innerDirectory, Set<MavenDependencyLink> linkSet) {
+    File workDir = workingDir;
+    if (innerDirectory != null) {
+      workDir = new File(workingDir, innerDirectory);
+    }
     Stopwatch stopwatch = Stopwatch.createStarted();
-    log.info("Processing " + workingDir + " ...");
+    log.info("Processing " + workDir + " ...");
     try {
-      Process process = Runtime.getRuntime().exec(mvnCmd, getEnv(), workingDir);
+      Process process = Runtime.getRuntime().exec(mvnCmd, getEnv(), workDir);
       processOutput(process, linkSet);
     } catch (IOException e) {
       log.error("Cannot execute mvn command", e);
