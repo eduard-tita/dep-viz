@@ -17,6 +17,8 @@ public class Configuration
 
   private GitConfig gitConfig;
 
+  private GraphvizConfig graphvizConfig;
+
   private Map<String, Object> features;
 
   public Configuration() {
@@ -57,6 +59,14 @@ public class Configuration
     this.gitConfig = gitConfig;
   }
 
+  public GraphvizConfig getGraphvizConfig() {
+    return graphvizConfig;
+  }
+
+  public void setGraphvizConfig(final GraphvizConfig graphvizConfig) {
+    this.graphvizConfig = graphvizConfig;
+  }
+
   public Map<String, Object> getFeatures() {
     return features;
   }
@@ -71,6 +81,7 @@ public class Configuration
         "workDirectory='" + workDirectory + '\'' +
         ", repos=" + repos +
         ", gitConfig=" + gitConfig +
+        ", graphvizConfig=" + graphvizConfig +
         ", features=" + features +
         '}';
   }

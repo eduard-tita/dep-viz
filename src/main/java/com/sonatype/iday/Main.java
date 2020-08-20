@@ -51,7 +51,7 @@ public class Main
     GraphGenerator generator = new GraphGenerator(ignoreSingle);
     generator.generate(linkSet, "dot-graph.txt");
 
-    GraphRenderer renderer = new GraphRenderer();
-    renderer.render("dot-graph.txt", "dot-graph.svg");
+    GraphRenderer renderer = new GraphRenderer(configuration.getGraphvizConfig());
+    renderer.render("dot-graph.txt");
   }
 }

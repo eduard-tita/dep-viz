@@ -3,6 +3,7 @@ package com.sonatype.iday.graph;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import com.sonatype.iday.config.GraphvizConfig;
 import com.sonatype.iday.util.Stopwatch;
 
 import org.slf4j.Logger;
@@ -12,13 +13,19 @@ public class GraphRenderer
 {
   private static final Logger log = LoggerFactory.getLogger(GraphRenderer.class);
 
-  private static String dotCmd = "dot -Tsvg ";
+  private final GraphvizConfig config;
+  private final String dotCmd;
 
-  public void render(String graphFileName, String outputFileName) {
+  public GraphRenderer(final GraphvizConfig config) {
+    this.config = config;
+    dotCmd = config.getExecutable() + " -T" + config.getFormat() + " -o " + config.getOutput();
+  }
+
+  public void render(String graphFileName) {
     Stopwatch stopwatch = new Stopwatch();
-    log.info("Rendering " + graphFileName + " ...");
+    log.info("Rendering graph to " + config.getOutput() + " ...");
     try {
-      String cmd = dotCmd + graphFileName + " -o " + outputFileName;
+      String cmd = dotCmd + " " + graphFileName;
       Process process = Runtime.getRuntime().exec(cmd);
       process.waitFor();
     } catch (IOException | InterruptedException e) {
