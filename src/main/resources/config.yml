@@ -1,14 +1,13 @@
 repos:
-  - https://github.com/sonatype/insight-scanner
-  - https://github.com/sonatype/insight-brain
-  - https://github.com/sonatype/nexus-dependency-management
+#  - https://github.com/sonatype/insight-scanner
+#  - https://github.com/sonatype/insight-brain
+#  - https://github.com/sonatype/nexus-dependency-management
   - https://github.com/sonatype/nexus-scm-client
-  - https://github.com/sonatype/nexus-java-api
-  - https://github.com/sonatype/insight-eclipse - com.sonatype.clm.ide.eclipse.parent
-  - https://github.com/sonatype/clm-maven-plugin
-  - https://github.com/sonatype/clm-bamboo-plugin
-  - https://github.com/jenkinsci/nexus-platform-plugin
-  - https://github.com/sonatype/nexus-scm-tools
+#  - https://github.com/sonatype/nexus-java-api
+#  - https://github.com/sonatype/insight-eclipse - com.sonatype.clm.ide.eclipse.parent
+#  - https://github.com/sonatype/clm-maven-plugin
+#  - https://github.com/sonatype/clm-bamboo-plugin
+#  - https://github.com/jenkinsci/nexus-platform-plugin
 
 workDirectory: /home/eduard/tmp/dep-viz
 

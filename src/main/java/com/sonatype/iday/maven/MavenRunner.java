@@ -13,7 +13,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.common.base.Stopwatch;
+import com.sonatype.iday.util.Stopwatch;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,7 @@ public class MavenRunner
     if (innerDirectory != null) {
       workDir = new File(workingDir, innerDirectory);
     }
-    Stopwatch stopwatch = Stopwatch.createStarted();
+    Stopwatch stopwatch = new Stopwatch();
     log.info("Processing " + workDir + " ...");
     try {
       Process process = Runtime.getRuntime().exec(mvnCmd, getEnv(), workDir);

@@ -24,8 +24,7 @@ public class Main
     Configuration configuration;
     try {
       configuration = Configuration.load();
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       log.error("Cannot lead configuration. Execution aborted.", e);
       return;
     }
@@ -37,28 +36,17 @@ public class Main
     MavenRunner mavenRunner = new MavenRunner(mvnHome);
     Set<MavenDependencyLink> linkSet = new HashSet<>();
 
-    GitRunner gitRunner = new GitRunner(configuration.getGitConfig(), configuration.getWorkDirectory());
-    for (GitRepo repo : configuration.getRepos()) {
-      String repoUrl = repo.getUrl();
-      File dir = gitRunner.execute(repoUrl);
-      mavenRunner.scanDirectory(dir, repo.getDirectory(), linkSet);
+    try {
+      GitRunner gitRunner = new GitRunner(configuration.getGitConfig(), configuration.getWorkDirectory());
+      for (GitRepo repo : configuration.getRepos()) {
+        String repoUrl = repo.getUrl();
+        File dir = gitRunner.execute(repoUrl);
+        mavenRunner.scanDirectory(dir, repo.getDirectory(), linkSet);
+      }
+    } catch (IOException e) {
+      log.error("Cannot process repositories. Execution aborted.", e);
+      return;
     }
-
-    //dirList.add("/home/eduard/projects/insight-brain");
-    //dirList.add("/home/eduard/projects/nexus-java-api");
-    //dirList.add("/home/eduard/projects/clm-bamboo-plugin");
-    //dirList.add("/home/eduard/projects/docker-nexus-iq-cli");
-    //dirList.add("/home/eduard/projects/iq-azure-devops");
-    //dirList.add("/home/eduard/projects/nexus-platform-plugin");
-    //dirList.add("/home/eduard/projects/clm-maven-plugin");
-    //dirList.add("/home/eduard/projects/gitlab-nexus-platform-plugin");
-    //dirList.add("/home/eduard/projects/insight-ide");
-    //dirList.add("/home/eduard/projects/iq-jira-plugin");
-    //dirList.add("/home/eduard/projects/source-defender");
-    //dirList.add("/home/eduard/projects/hosted-data-services");
-    //dirList.add("/home/eduard/projects/insight-scanner");
-    //dirList.add("/home/eduard/projects/nexus-scm-tools");
-
     boolean ignoreSingle = (boolean) configuration.getFeatures().get("ignore-single");
     GraphGenerator generator = new GraphGenerator(ignoreSingle);
     generator.generate(linkSet, "dot-graph.txt");

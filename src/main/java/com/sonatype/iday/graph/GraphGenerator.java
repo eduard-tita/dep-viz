@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit;
 import com.sonatype.iday.maven.MavenComponent;
 import com.sonatype.iday.maven.MavenDependencyLink;
 import com.sonatype.iday.maven.SemVer;
+import com.sonatype.iday.util.Stopwatch;
 
-import com.google.common.base.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +36,7 @@ public class GraphGenerator
 
   public void generate(Set<MavenDependencyLink> linkSet, String fileName) {
     log.info("Generating the graph...");
-    Stopwatch stopwatch = Stopwatch.createStarted();
+    Stopwatch stopwatch = new Stopwatch();
 
     linkSet.forEach(link -> log.trace("{}", link));
     log.info("Link set size: {}", linkSet.size());

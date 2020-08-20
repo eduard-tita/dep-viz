@@ -3,7 +3,8 @@ package com.sonatype.iday.graph;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import com.google.common.base.Stopwatch;
+import com.sonatype.iday.util.Stopwatch;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,7 @@ public class GraphRenderer
   private static String dotCmd = "dot -Tsvg ";
 
   public void render(String graphFileName, String outputFileName) {
-    Stopwatch stopwatch = Stopwatch.createStarted();
+    Stopwatch stopwatch = new Stopwatch();
     log.info("Rendering " + graphFileName + " ...");
     try {
       String cmd = dotCmd + graphFileName + " -o " + outputFileName;
