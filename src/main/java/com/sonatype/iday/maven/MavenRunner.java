@@ -73,6 +73,8 @@ public class MavenRunner
         if (matcher.matches()) {
           if (line.startsWith("com.sonatype.") || line.startsWith("org.sonatype.")) {
             stack[0] = line;
+            MavenDependencyLink link = new MavenDependencyLink(new MavenComponent(line), MavenComponent.NO_COMP);
+            linkSet.add(link);
           }
           else {
             String value = line;

@@ -4,6 +4,8 @@ import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.TreeSet;
 
+import com.sonatype.iday.maven.MavenComponent;
+
 public class GraphCluster
 {
   private final String id;
@@ -60,5 +62,14 @@ public class GraphCluster
 
   public void setSingleVersion(final boolean singleVersion) {
     this.singleVersion = singleVersion;
+  }
+
+  public boolean isNoCompCluster() {
+    for (GraphNode graphNode : nodeSet) {
+      if (graphNode.component.equals(MavenComponent.NO_COMP)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

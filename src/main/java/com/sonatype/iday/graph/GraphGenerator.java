@@ -110,6 +110,9 @@ public class GraphGenerator
       if (ignoreSingle && cluster.isSingleVersion()) {
         continue;
       }
+      if (cluster.isNoCompCluster()) {
+        continue;
+      }
       out.write("subgraph cluster" + count++ + " {\n");
       out.write("  label=\"" + cluster.getId() + "\";\n");
       out.write("  style=filled;\n");
@@ -136,6 +139,9 @@ public class GraphGenerator
       final Set<GraphNode> nodes,
       Writer out) throws IOException {
     for (MavenDependencyLink link : linkSet) {
+      if (link.getSource().equals(MavenComponent.NO_COMP) || link.getTarget().equals(MavenComponent.NO_COMP)) {
+        continue;
+      }
       GraphNode sourceNode = link.getSourceNode();
       GraphNode targetNode = link.getTargetNode();
       if (ignoreSingle && (sourceNode.parent.isSingleVersion() || targetNode.parent.isSingleVersion())) {
