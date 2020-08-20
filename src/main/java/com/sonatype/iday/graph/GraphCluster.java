@@ -65,11 +65,6 @@ public class GraphCluster
   }
 
   public boolean isNoCompCluster() {
-    for (GraphNode graphNode : nodeSet) {
-      if (graphNode.component.equals(MavenComponent.NO_COMP)) {
-        return true;
-      }
-    }
-    return false;
+    return id.equals(MavenComponent.NO_COMP.getArtifactId());
   }
 }

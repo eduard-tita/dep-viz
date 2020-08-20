@@ -11,15 +11,26 @@ public class MavenComponent
 {
   private static final Logger log = LoggerFactory.getLogger(MavenComponent.class);
 
-  public static final MavenComponent NO_COMP = new MavenComponent("no-group:no-artifact:jar:1.0.0");
+  private static final Map<String, String> nodeIdMap = new HashMap<>();
 
-  private static int nextNodeId = 0;
-  private static Map<String, String> nodeIdMap;
+  public static final MavenComponent NO_COMP = new MavenComponent();
 
-  private String groupId;
-  private String artifactId;
-  private SemVer version;
-  private String nodeId;
+  private static int nextNodeId = 1;
+
+  private final String groupId;
+  private final String artifactId;
+  private final SemVer version;
+  private final String nodeId;
+
+  private MavenComponent() {
+    groupId = "no-group";
+    artifactId = "no-artifact";
+    version = new SemVer("1.0.0");
+    String key = String.format("%s : %s : %s", groupId, artifactId, version);
+    nodeId = "N0";
+    nodeIdMap.put(key, nodeId);
+    log.trace("{} = '{}'", nodeId, key);
+  }
 
   MavenComponent(final String identifier) {
     Objects.requireNonNull(identifier);
@@ -33,15 +44,12 @@ public class MavenComponent
       version = new SemVer(parts[parts.length - 1]);
     }
     String key = String.format("%s : %s : %s", groupId, artifactId, version);
-    if (nodeIdMap == null) {
-      nodeIdMap = new HashMap<>();
-    }
     if (nodeIdMap.containsKey(key)) {
       nodeId = nodeIdMap.get(key);
     } else {
       nodeId = "N" + nextNodeId++;
       nodeIdMap.put(key, nodeId);
-      //log.debug("{} = '{}'", nodeId, key);
+      log.trace("{} = '{}'", nodeId, key);
     }
   }
 

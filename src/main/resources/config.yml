@@ -20,7 +20,7 @@ mavenConfig:
   goal: dependency:tree
   scope: compile
   # root(s) of dependency sub-trees to be considered for processing
-  includes: com.sonatype.*,org.sonatype.*
+  includes: com.sonatype.*::jar,org.sonatype.*::jar
   # reg exp has to match the includes above
   dependencyTreePattern: '[-+ \\|]*(com|org)\.sonatype\..+'
 
