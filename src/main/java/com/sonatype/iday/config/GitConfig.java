@@ -39,7 +39,7 @@ public class GitConfig
   public String toString() {
     return "GitConfig{" +
         "username='" + username + '\'' +
-        ", token='" + token + '\'' +
+        ", token=<token>" +
         ", executable='" + executable + '\'' +
         '}';
   }

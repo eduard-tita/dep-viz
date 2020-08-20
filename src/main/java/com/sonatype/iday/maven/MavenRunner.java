@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.sonatype.iday.config.MavenConfig;
 import com.sonatype.iday.util.Stopwatch;
 
 import org.slf4j.Logger;
@@ -22,32 +23,22 @@ public class MavenRunner
 {
   private static final Logger log = LoggerFactory.getLogger(MavenRunner.class);
 
-  String mvnCmd;
+  private final String mvnCmd;
 
-  String[] envArray;
+  private final String[] envArray;
 
-  public MavenRunner(final String mavenHome) {
-    String mvnExec;
-    if (mavenHome.endsWith("/")) {
-      mvnExec = mavenHome + "bin/mvn";
-    } else {
-      mvnExec = mavenHome + "/bin/mvn";
+  private final Pattern pattern;
+
+  public MavenRunner(final MavenConfig config) {
+    mvnCmd = config.getExecutable() + " " + config.getGoal() + " -Dscope=" + config.getScope() + " -Dincludes=" + config.getIncludes();
+    pattern = Pattern.compile(config.getDependencyTreePattern());
+
+    List<String> env = new LinkedList<>();
+    Map<String, String> getenv = System.getenv();
+    for (Entry<String, String> entry : getenv.entrySet()) {
+      env.add(entry.getKey() + "=" + entry.getValue());
     }
-    mvnCmd = mvnExec + " dependency:tree -Dscope=compile -Dincludes=com.sonatype.*,org.sonatype.*";
-  }
-
-  String[] getEnv() {
-    if (envArray == null) {
-      List<String> env = new LinkedList<>();
-      Map<String, String> getenv = System.getenv();
-      for (Entry<String, String> entry : getenv.entrySet()) {
-        env.add(entry.getKey() + "=" + entry.getValue());
-      }
-      //log.info("ENV:");
-      //env.forEach(k -> log.info("{}", k));
-      envArray = env.toArray(new String[]{});
-    }
-    return envArray;
+    envArray = env.toArray(new String[]{});
   }
 
   public void scanDirectory(File workingDir, final String innerDirectory, Set<MavenDependencyLink> linkSet) {
@@ -58,7 +49,8 @@ public class MavenRunner
     Stopwatch stopwatch = new Stopwatch();
     log.info("Processing " + workDir + " ...");
     try {
-      Process process = Runtime.getRuntime().exec(mvnCmd, getEnv(), workDir);
+      log.trace("Executing [{}] in {} ...", mvnCmd, workDir);
+      Process process = Runtime.getRuntime().exec(mvnCmd, envArray, workDir);
       processOutput(process, linkSet);
     } catch (IOException e) {
       log.error("Cannot execute mvn command", e);
@@ -67,9 +59,7 @@ public class MavenRunner
     log.info("Processed dependency tree in {} sec.", elapsed);
   }
 
-  private static final Pattern SONATYPE_PATTERN = Pattern.compile("[-+ \\\\|]*(com|org)\\.sonatype\\..+");
-
-  private static void processOutput(Process process, Set<MavenDependencyLink> linkSet) throws IOException {
+  private void processOutput(Process process, Set<MavenDependencyLink> linkSet) throws IOException {
     String[] stack = new String[64];
 
     try (BufferedReader output = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
@@ -79,7 +69,7 @@ public class MavenRunner
         // strip [INFO]
         line = line.substring(7);
 
-        Matcher matcher = SONATYPE_PATTERN.matcher(line);
+        Matcher matcher = pattern.matcher(line);
         if (matcher.matches()) {
           if (line.startsWith("com.sonatype.") || line.startsWith("org.sonatype.")) {
             stack[0] = line;

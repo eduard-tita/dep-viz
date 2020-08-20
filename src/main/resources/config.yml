@@ -1,20 +1,28 @@
+#
+# This is a template - not used at runtime
+#
 repos:
-  - https://github.com/sonatype/insight-scanner
-  - https://github.com/sonatype/insight-brain
-  - https://github.com/sonatype/nexus-dependency-management
-  - https://github.com/sonatype/nexus-scm-client
-  - https://github.com/sonatype/nexus-java-api
-#  - https://github.com/sonatype/insight-eclipse - com.sonatype.clm.ide.eclipse.parent
-#  - https://github.com/sonatype/clm-maven-plugin
-#  - https://github.com/sonatype/clm-bamboo-plugin
-#  - https://github.com/jenkinsci/nexus-platform-plugin
+  # format: repo_url [ - internal_directory_where_the_dependency_tree_command_is_executed ]
+  - https://github.com/org/repo-1
+  - https://github.com/org/repo-2
+  - https://github.com/org/repo-3 - repo/internal/dir
 
-workDirectory: /home/eduard/tmp/dep-viz
+# local directory where the repositories are cloned
+workDirectory: /home/user/tmp/dep-viz
 
 gitConfig:
   executable: /usr/bin/git
-  username: eduard-tita
-  token: c75c1117a2db13f2cc0d5d15db12eb13b20e9397
+  username: user
+  token: abcdefabcdefabcdefabcdefabcdefabcdef
+
+mavenConfig:
+  executable: /usr/bin/mvn
+  goal: dependency:tree
+  scope: compile
+  # root(s) of dependency sub-trees to be considered for processing
+  includes: com.sonatype.*,org.sonatype.*
+  # reg exp has to match the includes above
+  dependencyTreePattern: '[-+ \\|]*(com|org)\.sonatype\..+'
 
 graphvizConfig:
   executable: /usr/bin/dot
@@ -22,5 +30,6 @@ graphvizConfig:
   output: dep-graph.svg
 
 features:
+  # set to 'true' if you want to skip rendering of single version, non-snapshot graph nodes
   ignore-single: false
 

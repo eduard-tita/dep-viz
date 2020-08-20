@@ -24,5 +24,6 @@ hs_err_pid*
 /.idea/
 /dot-graph.txt
 /*.svg
+/*.yml
 /dep-viz.iml
 /target/

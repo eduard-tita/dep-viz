@@ -1,6 +1,8 @@
 package com.sonatype.iday.config;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import org.apache.commons.lang3.StringUtils;
 
 public class Configuration
 {
@@ -16,6 +19,8 @@ public class Configuration
   private List<GitRepo> repos;
 
   private GitConfig gitConfig;
+
+  private MavenConfig mavenConfig;
 
   private GraphvizConfig graphvizConfig;
 
@@ -29,8 +34,12 @@ public class Configuration
     return mapper.readValue(new File(configFilePath), Configuration.class);
   }
 
-  public static Configuration load() throws IOException {
-    InputStream inputStream = Configuration.class.getClassLoader().getResourceAsStream("config.yml");
+  public static Configuration load(final String[] args) throws IOException {
+    if (args == null || args.length != 1 || StringUtils.isBlank(args[0])) {
+      throw new IllegalArgumentException();
+    }
+    //InputStream inputStream = Configuration.class.getClassLoader().getResourceAsStream("config.yml");
+    InputStream inputStream = new BufferedInputStream(new FileInputStream(args[0]));
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     return mapper.readValue(inputStream, Configuration.class);
   }
@@ -59,6 +68,14 @@ public class Configuration
     this.gitConfig = gitConfig;
   }
 
+  public MavenConfig getMavenConfig() {
+    return mavenConfig;
+  }
+
+  public void setMavenConfig(final MavenConfig mavenConfig) {
+    this.mavenConfig = mavenConfig;
+  }
+
   public GraphvizConfig getGraphvizConfig() {
     return graphvizConfig;
   }
@@ -78,11 +95,12 @@ public class Configuration
   @Override
   public String toString() {
     return "Configuration{" +
-        "workDirectory='" + workDirectory + '\'' +
-        ", repos=" + repos +
-        ", gitConfig=" + gitConfig +
-        ", graphvizConfig=" + graphvizConfig +
-        ", features=" + features +
+        "\nworkDirectory='" + workDirectory + '\'' +
+        ", \nrepos=" + repos +
+        ", \ngitConfig=" + gitConfig +
+        ", \nmavenConfig=" + mavenConfig +
+        ", \ngraphvizConfig=" + graphvizConfig +
+        ", \nfeatures=" + features +
         '}';
   }
 }
