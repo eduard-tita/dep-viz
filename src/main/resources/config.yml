@@ -1,10 +1,14 @@
 repos:
-  - https://github.com/sonatype/nexus-dependency-management
-  - https://github.com/sonatype/nexus-scm-client
   - https://github.com/sonatype/insight-scanner
   - https://github.com/sonatype/insight-brain
+  - https://github.com/sonatype/nexus-dependency-management
+  - https://github.com/sonatype/nexus-scm-client
   - https://github.com/sonatype/nexus-java-api
-#  - https://github.com/sonatype/insight-eclipse - com.sonatype.clm.ide.eclipse.parent
+  - https://github.com/sonatype/insight-eclipse - com.sonatype.clm.ide.eclipse.parent
+  - https://github.com/sonatype/clm-maven-plugin
+  - https://github.com/sonatype/clm-bamboo-plugin
+  - https://github.com/jenkinsci/nexus-platform-plugin
+  - https://github.com/sonatype/nexus-scm-tools
 
 workDirectory: /home/eduard/tmp/dep-viz
 
@@ -12,3 +16,7 @@ gitConfig:
   executable: /usr/bin/git
   username: eduard-tita
   token: c75c1117a2db13f2cc0d5d15db12eb13b20e9397
+
+features:
+  ignore-single: false
+

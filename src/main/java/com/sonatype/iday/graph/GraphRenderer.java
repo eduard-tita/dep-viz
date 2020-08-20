@@ -1,20 +1,7 @@
 package com.sonatype.iday.graph;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.sonatype.iday.maven.MavenComponent;
-import com.sonatype.iday.maven.MavenDependencyLink;
 
 import com.google.common.base.Stopwatch;
 import org.slf4j.Logger;
@@ -37,6 +24,6 @@ public class GraphRenderer
       log.error("Cannot execute dot command", e);
     }
     long elapsed = stopwatch.elapsed(TimeUnit.MILLISECONDS);
-    log.info("Processed graph rendering in {}ms", elapsed);
+    log.info("Graph rendered in {}ms", elapsed);
   }
 }

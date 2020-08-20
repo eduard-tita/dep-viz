@@ -62,8 +62,8 @@ public class MavenRunner
     } catch (IOException e) {
       log.error("Cannot execute mvn command", e);
     }
-    long elapsed = stopwatch.elapsed(TimeUnit.MILLISECONDS);
-    log.info("Processed dependency tree in {}ms", elapsed);
+    long elapsed = stopwatch.elapsed(TimeUnit.SECONDS);
+    log.info("Processed dependency tree in {} sec.", elapsed);
   }
 
   private static final Pattern SONATYPE_PATTERN = Pattern.compile("[-+ \\\\|]*(com|org)\\.sonatype\\..+");
@@ -74,7 +74,7 @@ public class MavenRunner
     try (BufferedReader output = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
       String line = output.readLine();
       while (line != null) {
-        //log.debug(line);
+        log.trace(line);
         // strip [INFO]
         line = line.substring(7);
 
@@ -85,13 +85,10 @@ public class MavenRunner
           }
           else {
             String value = line;
-            // strip :compile
-            int index = value.indexOf(":compile");
-            if (index > -1) {
-              value = value.substring(0, index);
-            }
+            value = stripIfNeeded(value, ":compile");
+            value = stripIfNeeded(value, ":provided");
             // calculate level
-            index = value.indexOf("com.sonatype.");
+            int index = value.indexOf("com.sonatype.");
             if (index == -1) {
               index = value.indexOf("org.sonatype.");
             }
@@ -105,10 +102,17 @@ public class MavenRunner
               linkSet.add(link);
             }
           }
-          log.debug(line);
         }
         line = output.readLine();
       }
     }
+  }
+
+  private static String stripIfNeeded(final String value, final String stringToFind) {
+    int index = value.indexOf(stringToFind);
+    if (index > -1) {
+      return value.substring(0, index);
+    }
+    return value;
   }
 }

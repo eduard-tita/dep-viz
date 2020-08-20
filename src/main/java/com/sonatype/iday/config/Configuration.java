@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -15,6 +16,8 @@ public class Configuration
   private List<GitRepo> repos;
 
   private GitConfig gitConfig;
+
+  private Map<String, Object> features;
 
   public Configuration() {
   }
@@ -54,12 +57,21 @@ public class Configuration
     this.gitConfig = gitConfig;
   }
 
+  public Map<String, Object> getFeatures() {
+    return features;
+  }
+
+  public void setFeatures(final Map<String, Object> features) {
+    this.features = features;
+  }
+
   @Override
   public String toString() {
     return "Configuration{" +
         "workDirectory='" + workDirectory + '\'' +
-        ", gitConfig=" + gitConfig +
         ", repos=" + repos +
+        ", gitConfig=" + gitConfig +
+        ", features=" + features +
         '}';
   }
 }

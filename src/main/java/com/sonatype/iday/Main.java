@@ -21,17 +21,6 @@ public class Main
   private static final Logger log = LoggerFactory.getLogger(Main.class);
 
   public static void main(String... args) {
-    boolean ignoreSingle = false;
-
-    if (args.length > 0) {
-      if (args[0].equals("--ignore-single")) {
-        ignoreSingle = true;
-      } else {
-        showUsage();
-        return;
-      }
-    }
-
     Configuration configuration;
     try {
       configuration = Configuration.load();
@@ -70,20 +59,11 @@ public class Main
     //dirList.add("/home/eduard/projects/insight-scanner");
     //dirList.add("/home/eduard/projects/nexus-scm-tools");
 
+    boolean ignoreSingle = (boolean) configuration.getFeatures().get("ignore-single");
     GraphGenerator generator = new GraphGenerator(ignoreSingle);
     generator.generate(linkSet, "dot-graph.txt");
 
     GraphRenderer renderer = new GraphRenderer();
     renderer.render("dot-graph.txt", "dot-graph.svg");
-  }
-
-  private static void showUsage() {
-    String buf =
-        "Usage: java -jar dep-viz.jar [-h] [--ignore-single]\n" +
-        "Dep-viz provides a simple way to visualize dependencies relationships between several " +
-        "interconnected projects and quickly see which ones are out of date.\n" +
-        "  -h, --help            Show this help message and exit.\n" +
-        "      --ignore-single   Ignores single graph nodes with no-SNAPSHOT version.\n";
-    System.out.println(buf);
   }
 }

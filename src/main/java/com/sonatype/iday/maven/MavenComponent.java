@@ -20,6 +20,7 @@ public class MavenComponent
   private String nodeId;
 
   MavenComponent(final String identifier) {
+    Objects.requireNonNull(identifier);
     String[] parts = identifier.split(":");
     //assert parts && parts.length > 3
     groupId = parts[0];

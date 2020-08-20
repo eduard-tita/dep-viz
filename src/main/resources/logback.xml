@@ -7,9 +7,10 @@
     </encoder>
   </appender>
 
-  <logger name="org.zeroturnaround.exec" level="info" />
+  <logger name="org.zeroturnaround.exec" level="INFO" />
+<!--  <logger name="com.sonatype.iday.maven.MavenRunner" level="TRACE" />-->
 
-  <root level="info">
+  <root level="INFO">
     <appender-ref ref="CONSOLE" />
   </root>
 </configuration>

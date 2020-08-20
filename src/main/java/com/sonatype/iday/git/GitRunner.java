@@ -1,6 +1,11 @@
 package com.sonatype.iday.git;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.sonatype.iday.config.GitConfig;
@@ -15,6 +20,8 @@ import com.sonatype.nexus.scm.api.model.ProjectUri;
 import com.google.common.base.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.util.Collections.unmodifiableList;
 
 public class GitRunner
 {
@@ -48,11 +55,28 @@ public class GitRunner
       }
 
       syncRepository(gitApi, repository);
+      updateSparseCheckout(repository);
       return repository;
     } catch (GitException e) {
       log.error("Cannot execute mvn command", e);
     }
     return null;
+  }
+
+  private static final List<String> SPARSE_CHECKOUT_FILES = unmodifiableList(
+      Arrays.asList("pom.xml", "MANIFEST.MF", "feature.xml", "*.target"));
+
+  private void updateSparseCheckout(final File target) throws GitException {
+    // Ensure the sparse checkout file is written to the repo
+    File dotGit = new File(target, ".git");
+    File info = new File(dotGit, "info");
+    File sparse = new File(info, "sparse-checkout");
+    try {
+      Files.write(sparse.toPath(), SPARSE_CHECKOUT_FILES, StandardCharsets.UTF_8);
+    }
+    catch (IOException e) {
+      throw new GitException("Unable to write sparse checkout file", e);
+    }
   }
 
   private void syncRepository(final GitApi gitApi, final File repository) throws GitException {

@@ -10,11 +10,13 @@ import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import com.sonatype.iday.maven.MavenComponent;
 import com.sonatype.iday.maven.MavenDependencyLink;
 import com.sonatype.iday.maven.SemVer;
 
+import com.google.common.base.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,10 +35,11 @@ public class GraphGenerator
   }
 
   public void generate(Set<MavenDependencyLink> linkSet, String fileName) {
-    log.info("Link set size: {}", linkSet.size());
-    linkSet.forEach(link -> log.debug("{}", link));
-
     log.info("Generating the graph...");
+    Stopwatch stopwatch = Stopwatch.createStarted();
+
+    linkSet.forEach(link -> log.trace("{}", link));
+    log.info("Link set size: {}", linkSet.size());
 
     Set<GraphNode> nodes = collectNodes(linkSet);
 
@@ -52,6 +55,8 @@ public class GraphGenerator
       printEdges(linkSet, nodes, out);
       out.write("}\n");
 
+      long elapsed = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+      log.info("Graph generated in {}ms.", elapsed);
       log.info("Done.");
     }
     catch (IOException e) {
@@ -69,7 +74,7 @@ public class GraphGenerator
       clusters.add(cluster);
     }
     setNodeColors(clusters);
-    log.info("Created {} graph clusters", clusterMap.size());
+    log.info("Graph clusters: {}", clusterMap.size());
     clusterMap.forEach( (k, v) -> log.debug("{} : {}", k, v));
   }
 
