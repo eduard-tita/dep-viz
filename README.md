@@ -20,6 +20,10 @@ Outdated artifact versions and their dependency paths(graph edges) are marked in
 In case the dependency graph is too large there is an option to skip rendering of the single version, not SNAPHSOT clusters 
 (see the configuration template for details).
 
+Here is a graph sample, based on Apache Struts:
+
+![Dep. Graph Sample](https://github.com/eduard-tita/dep-viz/graph-sample.svg)
+
 **Note:**
 > Depending on the project set selected, there might be cases when there is not enough information to determine all outdated artifact versions.  
 > In such cases not all outdated artifact versions will be red.    
