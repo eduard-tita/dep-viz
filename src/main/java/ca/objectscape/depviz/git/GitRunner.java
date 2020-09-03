@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -35,13 +34,14 @@ public class GitRunner
     // git auth file
     File authFile = createAuthCredentialFile();
     // setup git cmd env
-    List<String> env = new LinkedList<>();
-    env.add("GIT_TOKEN" + "=" + gitConfig.getToken());
-    env.add("GIT_USERNAME" + "=" + gitConfig.getUsername());
-    env.add("GIT_TERMINAL_PROMPT" + "=0");
-    env.add("GIT_ASKPASS" + "=" + authFile.getAbsolutePath());
-    env.add("SSH_ASKPASS" + "=" + authFile.getAbsolutePath());
-    environment = env.toArray(new String[]{});
+    environment = new String[]{
+        "GIT_TOKEN" + "=" + gitConfig.getToken(),
+        "GIT_USERNAME" + "=" + gitConfig.getUsername(),
+        "GIT_TERMINAL_PROMPT" + "=0",
+        "GIT_ASKPASS" + "=" + authFile.getAbsolutePath(),
+        "SSH_ASKPASS" + "=" + authFile.getAbsolutePath()
+    };
+    log.debug("GitRunner env: {}", Arrays.toString(environment));
   }
 
   public File execute(String repositoryUrl) {
@@ -136,12 +136,12 @@ public class GitRunner
   private static final String WINDOWS_AUTH_FILE_CONTENT =
       "@set arg=%~1\r\n" +
       "@if (%arg:~0,8%)==(Password) echo %GIT_TOKEN%\r\n" +
-      "@if (%arg:~0,8%)==(Username) echo %GIT_USERNAME%\r\n";
+      "@if (%arg:~0,8%)==(Username) echo %GIT_USERNAME%\r\n\r\n";
 
   private static final String UNIX_AUTH_FILE_CONTENT =
       "#!/bin/sh\n" +
       "case \"$1\" in\n" +
       "Username*) echo \"$GIT_USERNAME\" ;;\n" +
       "Password*) echo \"$GIT_TOKEN\" ;;\n" +
-      "esac\n";
+      "esac\n\n";
 }
