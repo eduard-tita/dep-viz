@@ -25,7 +25,7 @@ java -jar dep-viz.jar config.yml
 Replace `dep-viz.jar` with the proper jar name, including version number. e.g. `dep-viz-1.0.jar`
 
 A template configuration file is available at `/src/main/resources/config.yml`. 
-Make a copy of it, updated it as needed, and pass it as the only program argument above.
+Make a copy of it, update it as needed, and pass it as the only program argument above.
 
 ## To Do
 
