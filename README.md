@@ -3,6 +3,8 @@
 ![Java CI with Maven](https://github.com/eduard-tita/dep-viz/workflows/Java%20CI%20with%20Maven/badge.svg)
 [![DepShield Badge](https://depshield.sonatype.org/badges/eduard-tita/dep-viz/depshield.svg)](https://depshield.github.io)
 
+---
+
 `Dep-Viz` is a small tool that help visualize interdependencies in a set of interconnected projects.
 
 A dependency graph is generated. Artifact versions are nodes in this graph and multiple versions of the same artifact are grouped in clusters.
