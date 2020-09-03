@@ -22,7 +22,7 @@ In case the dependency graph is too large there is an option to skip rendering o
 
 Here is a graph sample, based on Apache Struts:
 
-![Dep. Graph Sample](https://github.com/eduard-tita/dep-viz/graph-sample.svg)
+![Dep. Graph Sample](https://github.com/eduard-tita/dep-viz/blob/master/graph-sample.svg)
 
 **Note:**
 > Depending on the project set selected, there might be cases when there is not enough information to determine all outdated artifact versions.  
