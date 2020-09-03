@@ -1,8 +1,8 @@
-package com.sonatype.iday.maven;
+package ca.objectscape.depviz.maven;
 
 import java.util.Objects;
 
-import com.sonatype.iday.graph.GraphNode;
+import ca.objectscape.depviz.graph.GraphNode;
 
 public class MavenDependencyLink
 {

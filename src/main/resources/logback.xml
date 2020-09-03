@@ -7,7 +7,7 @@
     </encoder>
   </appender>
 
-<!--  <logger name="com.sonatype.iday.maven.MavenRunner" level="TRACE" />-->
+<!--  <logger name="MavenRunner" level="TRACE" />-->
 
   <root level="INFO">
     <appender-ref ref="CONSOLE" />

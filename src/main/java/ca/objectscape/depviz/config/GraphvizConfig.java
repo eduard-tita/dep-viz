@@ -1,4 +1,4 @@
-package com.sonatype.iday.config;
+package ca.objectscape.depviz.config;
 
 public class GraphvizConfig
 {

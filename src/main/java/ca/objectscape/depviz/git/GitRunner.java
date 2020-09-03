@@ -1,4 +1,4 @@
-package com.sonatype.iday.git;
+package ca.objectscape.depviz.git;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,10 +11,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import com.sonatype.iday.config.GitConfig;
-import com.sonatype.iday.util.Digester;
-import com.sonatype.iday.util.Stopwatch;
-
+import ca.objectscape.depviz.config.GitConfig;
+import ca.objectscape.depviz.util.Digester;
+import ca.objectscape.depviz.util.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

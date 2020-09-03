@@ -1,4 +1,4 @@
-package com.sonatype.iday.util;
+package ca.objectscape.depviz.util;
 
 import java.util.concurrent.TimeUnit;
 

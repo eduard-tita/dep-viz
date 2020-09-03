@@ -1,4 +1,4 @@
-package com.sonatype.iday.graph;
+package ca.objectscape.depviz.graph;
 
 public enum VersionColor
 {

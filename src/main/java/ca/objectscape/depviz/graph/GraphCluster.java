@@ -1,10 +1,10 @@
-package com.sonatype.iday.graph;
+package ca.objectscape.depviz.graph;
 
 import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.TreeSet;
 
-import com.sonatype.iday.maven.MavenComponent;
+import ca.objectscape.depviz.maven.MavenComponent;
 
 public class GraphCluster
 {

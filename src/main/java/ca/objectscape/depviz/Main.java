@@ -1,18 +1,17 @@
-package com.sonatype.iday;
+package ca.objectscape.depviz;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.sonatype.iday.config.Configuration;
-import com.sonatype.iday.config.GitRepo;
-import com.sonatype.iday.git.GitRunner;
-import com.sonatype.iday.graph.GraphGenerator;
-import com.sonatype.iday.graph.GraphRenderer;
-import com.sonatype.iday.maven.MavenDependencyLink;
-import com.sonatype.iday.maven.MavenRunner;
-
+import ca.objectscape.depviz.config.Configuration;
+import ca.objectscape.depviz.config.GitRepo;
+import ca.objectscape.depviz.git.GitRunner;
+import ca.objectscape.depviz.graph.GraphGenerator;
+import ca.objectscape.depviz.graph.GraphRenderer;
+import ca.objectscape.depviz.maven.MavenDependencyLink;
+import ca.objectscape.depviz.maven.MavenRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +46,8 @@ public class Main
     Configuration configuration = null;
     try {
       configuration = Configuration.load(args);
-      log.info("Loaded: {}", configuration);
+      log.debug("Loaded: {}", configuration);
+      log.info("Configuration loaded successfully");
     } catch (Exception e) {
       log.error("Cannot load configuration; working directory: " + new File(".").getAbsolutePath(), e);
     }

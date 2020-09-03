@@ -1,11 +1,10 @@
-package com.sonatype.iday.graph;
+package ca.objectscape.depviz.graph;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import com.sonatype.iday.config.GraphvizConfig;
-import com.sonatype.iday.util.Stopwatch;
-
+import ca.objectscape.depviz.config.GraphvizConfig;
+import ca.objectscape.depviz.util.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

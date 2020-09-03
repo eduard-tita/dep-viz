@@ -1,4 +1,4 @@
-package com.sonatype.iday.config;
+package ca.objectscape.depviz.config;
 
 import java.security.InvalidParameterException;
 import java.util.Objects;

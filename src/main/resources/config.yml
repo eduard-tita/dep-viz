@@ -11,22 +11,29 @@ repos:
 workDirectory: /home/user/tmp/dep-viz
 
 gitConfig:
+  # full path to the git executable
   executable: /usr/bin/git
-  username: user
-  token: abcdefabcdefabcdefabcdefabcdefabcdef
+  # used by git cloning; in combination with the auth token must have access to all repositories above
+  username: valid-username-here
+  # used by git cloning; in combination with the username must have access to all repositories above
+  token: valid-token-here
 
 mavenConfig:
+  # full path to the mvn executable
   executable: /usr/bin/mvn
   goal: dependency:tree
   scope: compile
-  # root(s) of dependency sub-trees to be considered for processing
-  includes: com.sonatype.*::jar,org.sonatype.*::jar
-  # reg exp has to match the includes above
-  dependencyTreePattern: '[-+ \\|]*(com|org)\.sonatype\..+'
+  # root(s) of dependency sub-trees to be considered for processing; comma separated, maven glob format
+  includes: com.target.package.*::jar,org.target.package.*::jar
+  # regular expression - it must match the includes above
+  dependencyTreePattern: '[-+ \\|]*(com|org)\.target\.package\..+'
 
 graphvizConfig:
+  # full path to the dot executable, part of https://www.graphviz.org/ visualization suite
   executable: /usr/bin/dot
+  # output format - most vector and bitmap image formats are supported
   format: svg
+  # output file
   output: dep-graph.svg
 
 features:

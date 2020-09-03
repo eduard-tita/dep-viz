@@ -1,4 +1,4 @@
-package com.sonatype.iday.graph;
+package ca.objectscape.depviz.graph;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -12,10 +12,10 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import com.sonatype.iday.maven.MavenComponent;
-import com.sonatype.iday.maven.MavenDependencyLink;
-import com.sonatype.iday.maven.SemVer;
-import com.sonatype.iday.util.Stopwatch;
+import ca.objectscape.depviz.maven.MavenComponent;
+import ca.objectscape.depviz.maven.MavenDependencyLink;
+import ca.objectscape.depviz.maven.SemVer;
+import ca.objectscape.depviz.util.Stopwatch;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

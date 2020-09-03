@@ -1,4 +1,4 @@
-package com.sonatype.iday.maven;
+package ca.objectscape.depviz.maven;
 
 import java.util.HashMap;
 import java.util.Map;

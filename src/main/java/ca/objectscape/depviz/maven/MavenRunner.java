@@ -1,4 +1,4 @@
-package com.sonatype.iday.maven;
+package ca.objectscape.depviz.maven;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,9 +13,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sonatype.iday.config.MavenConfig;
-import com.sonatype.iday.util.Stopwatch;
-
+import ca.objectscape.depviz.config.MavenConfig;
+import ca.objectscape.depviz.util.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

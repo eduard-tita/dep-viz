@@ -1,6 +1,6 @@
-package com.sonatype.iday.graph;
+package ca.objectscape.depviz.graph;
 
-import com.sonatype.iday.maven.MavenComponent;
+import ca.objectscape.depviz.maven.MavenComponent;
 
 public class GraphNode
   implements Comparable<GraphNode>
