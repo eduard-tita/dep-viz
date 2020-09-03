@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -22,15 +23,33 @@ public class MavenRunner
 {
   private static final Logger log = LoggerFactory.getLogger(MavenRunner.class);
 
-  private final String mvnCmd;
+  private final String mvnInstallCmd;
+
+  private final String mvnDepTreeCmd;
 
   private final String[] envArray;
 
-  private final Pattern pattern;
+  private final List<String> prefixes;
+
+  private final List<Pattern> patterns;
 
   public MavenRunner(final MavenConfig config) {
-    mvnCmd = config.getExecutable() + " " + config.getGoal() + " -Dscope=" + config.getScope() + " -Dincludes=" + config.getIncludes();
-    pattern = Pattern.compile(config.getDependencyTreePattern());
+    mvnInstallCmd = config.getExecutable() + " install -DskipTests -DskipITs -Dskip-functional-test";
+    mvnDepTreeCmd = config.getExecutable() + " " + config.getGoal() + " -Dscope=" + config.getScope() + " -Dincludes=" + config.getIncludes();
+
+    prefixes = new ArrayList<>();
+    String[] strings = config.getIncludes().split("\\s*,\\s*");
+    for (String str : strings) {
+      String[] items = str.split(":");
+      prefixes.add(items[0].replace(".*", ""));
+    }
+    log.debug("Prefixes: {}", prefixes);
+
+    patterns = new ArrayList<>(prefixes.size());
+    for (String prefix : prefixes) {
+      patterns.add(Pattern.compile("[-+ \\\\|]*" + prefix.replace(".", "\\.") + ".+"));
+    }
+    log.debug("Patterns: {}", patterns);
 
     List<String> env = new LinkedList<>();
     Map<String, String> getenv = System.getenv();
@@ -48,10 +67,10 @@ public class MavenRunner
     Stopwatch stopwatch = new Stopwatch();
     log.info("Processing " + workDir + " ...");
     try {
-      log.trace("Executing [{}] in {} ...", mvnCmd, workDir);
-      Process process = Runtime.getRuntime().exec(mvnCmd, envArray, workDir);
+      log.trace("Executing [{}] in {} ...", mvnDepTreeCmd, workDir);
+      Process process = Runtime.getRuntime().exec(mvnDepTreeCmd, envArray, workDir);
       processOutput(process, linkSet);
-    } catch (IOException e) {
+    } catch (Exception e) {
       log.error("Cannot execute mvn command", e);
     }
     long elapsed = stopwatch.elapsed(TimeUnit.SECONDS);
@@ -68,33 +87,34 @@ public class MavenRunner
         // strip [INFO]
         line = line.substring(7);
 
-        Matcher matcher = pattern.matcher(line);
-        if (matcher.matches()) {
-          if (line.startsWith("com.sonatype.") || line.startsWith("org.sonatype.")) {
-            stack[0] = line;
-            MavenDependencyLink link = new MavenDependencyLink(new MavenComponent(line), MavenComponent.NO_COMP);
-            linkSet.add(link);
-          }
-          else {
-            String value = line;
-            value = stripIfNeeded(value, ":compile");
-            value = stripIfNeeded(value, ":provided");
-            // calculate level
-            int index = value.indexOf("com.sonatype.");
-            if (index == -1) {
-              index = value.indexOf("org.sonatype.");
-            }
-            value = value.substring(index);
-            int level = index / 3;
-
-            stack[level] = value;
-            if (level > 0) {
-              MavenDependencyLink link = new MavenDependencyLink(
-                  new MavenComponent(stack[level - 1]), new MavenComponent(stack[level]));
+        for (int i = 0; i < patterns.size(); i++) {
+          Matcher matcher = patterns.get(i).matcher(line);
+          if (matcher.matches()) {
+            if (line.startsWith(prefixes.get(i))) {
+              stack[0] = line;
+              MavenDependencyLink link = new MavenDependencyLink(new MavenComponent(line), MavenComponent.NO_COMP);
               linkSet.add(link);
             }
+            else {
+              String value = line;
+              value = stripIfNeeded(value, ":compile");
+              value = stripIfNeeded(value, ":provided");
+              // calculate level
+              int index = value.indexOf(prefixes.get(i));
+              value = value.substring(index);
+              int level = index / 3;
+
+              stack[level] = value;
+              if (level > 0) {
+                MavenDependencyLink link = new MavenDependencyLink(
+                    new MavenComponent(stack[level - 1]), new MavenComponent(stack[level]));
+                linkSet.add(link);
+              }
+            }
+            break;
           }
         }
+
         line = output.readLine();
       }
     }

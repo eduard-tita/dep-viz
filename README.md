@@ -5,18 +5,24 @@
 
 ---
 
-`Dep-Viz` is a small tool that help visualize interdependencies in a set of interconnected projects.
+`Dep-Viz` is a small tool that help visualize inter-dependencies in a set of interconnected projects. 
 
-A dependency graph is generated. Artifact versions are nodes in this graph and multiple versions of the same artifact are grouped in clusters.
-Outdated artifact versions and their dependencies(graph edges) are marked in red (see note below).     
+The tool generates a dependency graph. The graph generation starts from a set of artifact/artifact groups 
+(specified in the configuration file) and contains their dependency trees. In consequence, it may not always be a full dependency graph.
+
+Artifact versions are nodes in this graph and multiple versions of the same artifact are grouped in clusters 
+(shown with randomly colored backgrounds).
+
+Released artifact versions are shown in blue. Snapshot artifact versions are shown in black. 
+The tool determines which artifact versions are outdated, based on the information available (see note below).
+Outdated artifact versions and their dependency paths(graph edges) are marked in red.     
 
 In case the dependency graph is too large there is an option to skip rendering of the single version, not SNAPHSOT clusters 
 (see the configuration template for details).
 
 **Note:**
-> Depending on the project set selected, there might be cases when not all outdated artifact versions are detected.  
-> In such cases not all outdated artifact versions will be red. 
-> Users will have to visually inspect the graph and decide for themselves.   
+> Depending on the project set selected, there might be cases when there is not enough information to determine all outdated artifact versions.  
+> In such cases not all outdated artifact versions will be red.    
 
 ## Requirements
 

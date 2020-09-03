@@ -7,7 +7,7 @@
     </encoder>
   </appender>
 
-<!--  <logger name="MavenRunner" level="TRACE" />-->
+<!--  <logger name="ca.objectscape.depviz.maven.MavenRunner" level="TRACE" />-->
 
   <root level="INFO">
     <appender-ref ref="CONSOLE" />

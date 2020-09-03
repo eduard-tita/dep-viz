@@ -10,8 +10,6 @@ public class MavenConfig
 
   private String executable;
 
-  private String dependencyTreePattern;
-
   public MavenConfig() {
   }
 
@@ -47,14 +45,6 @@ public class MavenConfig
     this.executable = executable;
   }
 
-  public String getDependencyTreePattern() {
-    return dependencyTreePattern;
-  }
-
-  public void setDependencyTreePattern(final String dependencyTreePattern) {
-    this.dependencyTreePattern = dependencyTreePattern;
-  }
-
   @Override
   public String toString() {
     return "MavenConfig{" +
@@ -62,7 +52,6 @@ public class MavenConfig
         ", scope='" + scope + '\'' +
         ", goal='" + goal + '\'' +
         ", executable='" + executable + '\'' +
-        ", dependencyTreePattern='" + dependencyTreePattern + '\'' +
         '}';
   }
 }

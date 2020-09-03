@@ -25,8 +25,6 @@ mavenConfig:
   scope: compile
   # root(s) of dependency sub-trees to be considered for processing; comma separated, maven glob format
   includes: com.target.package.*::jar,org.target.package.*::jar
-  # regular expression - it must match the includes above
-  dependencyTreePattern: '[-+ \\|]*(com|org)\.target\.package\..+'
 
 graphvizConfig:
   # full path to the dot executable, part of https://www.graphviz.org/ visualization suite
@@ -39,4 +37,3 @@ graphvizConfig:
 features:
   # set to 'true' if you want to skip rendering of single version, non-snapshot graph nodes
   ignore-single: false
-
