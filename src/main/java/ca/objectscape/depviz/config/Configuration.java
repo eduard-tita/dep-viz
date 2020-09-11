@@ -1,7 +1,6 @@
 package ca.objectscape.depviz.config;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,7 +9,6 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import org.apache.commons.lang3.StringUtils;
 
 public class Configuration
 {
@@ -29,17 +27,8 @@ public class Configuration
   public Configuration() {
   }
 
-  public static Configuration load(String configFilePath) throws IOException {
-    ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-    return mapper.readValue(new File(configFilePath), Configuration.class);
-  }
-
-  public static Configuration load(final String[] args) throws IOException {
-    if (args == null || args.length != 1 || StringUtils.isBlank(args[0])) {
-      throw new IllegalArgumentException();
-    }
-    //InputStream inputStream = Configuration.class.getClassLoader().getResourceAsStream("config.yml");
-    InputStream inputStream = new BufferedInputStream(new FileInputStream(args[0]));
+  public static Configuration load(final String configFilePath) throws IOException {
+    InputStream inputStream = new BufferedInputStream(new FileInputStream(configFilePath));
     ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
     return mapper.readValue(inputStream, Configuration.class);
   }

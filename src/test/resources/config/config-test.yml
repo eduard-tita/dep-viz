@@ -4,8 +4,7 @@
 repos:
   # format: repo_url [ - internal_directory_where_the_dependency_tree_command_is_executed ]
   - https://github.com/org/repo-1
-  - https://github.com/org/repo-2
-  - https://github.com/org/repo-3 - repo/internal/dir
+  - https://github.com/org/repo-2 - parent-dir
 
 # local directory where the repositories are cloned
 workDirectory: /home/user/tmp/dep-viz

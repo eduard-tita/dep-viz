@@ -12,6 +12,7 @@ import ca.objectscape.depviz.graph.GraphGenerator;
 import ca.objectscape.depviz.graph.GraphRenderer;
 import ca.objectscape.depviz.maven.MavenDependencyLink;
 import ca.objectscape.depviz.maven.MavenRunner;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,12 @@ public class Main
   private static final Logger log = LoggerFactory.getLogger(Main.class);
 
   public static void main(String... args) {
-    Configuration configuration = loadConfiguration(args);
+    if (args == null || args.length != 1 || StringUtils.isBlank(args[0])) {
+      showUsage();
+      return;
+    }
+
+    Configuration configuration = loadConfiguration(args[0]);
     if (configuration == null) {
       showUsage();
       return;
@@ -42,10 +48,10 @@ public class Main
     log.info("\nUsage:\n\tjava -jar dep-viz.jar config.yml");
   }
 
-  private static Configuration loadConfiguration(final String[] args) {
+  private static Configuration loadConfiguration(final String configFile) {
     Configuration configuration = null;
     try {
-      configuration = Configuration.load(args);
+      configuration = Configuration.load(configFile);
       log.debug("Loaded: {}", configuration);
       log.info("Configuration loaded successfully");
     } catch (Exception e) {
@@ -68,7 +74,7 @@ public class Main
   }
 
   private static void createGraph(final Configuration configuration, final Set<MavenDependencyLink> linkSet) {
-    boolean ignoreSingle = (boolean) configuration.getFeatures().get("ignore-single");
+    boolean ignoreSingle = (boolean) configuration.getFeatures().get("ignoreSingle");
     GraphGenerator generator = new GraphGenerator(ignoreSingle);
     generator.generate(linkSet, "dot-graph.txt");
 

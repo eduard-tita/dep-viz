@@ -47,7 +47,7 @@ public class MavenRunner
 
     patterns = new ArrayList<>(prefixes.size());
     for (String prefix : prefixes) {
-      patterns.add(Pattern.compile("[-+ \\\\|]*" + prefix.replace(".", "\\.") + ".+"));
+      patterns.add(Pattern.compile("[-+ \\\\|]*" + prefix.replace(".", "\\.") + ".+:.+:.+"));
     }
     log.debug("Patterns: {}", patterns);
 
