@@ -8,3 +8,4 @@
 ## Version 1.0
 
 * Feature 1
+* Feature 0
