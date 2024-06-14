@@ -4,6 +4,10 @@
 @import "{{ site.theme }}";
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
+body {
+    margin-top: -40px;
+}
+
 .markdown-body {
     font-weight: normal;
     font-family: "Open Sans", sans-serif;
