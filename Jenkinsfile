@@ -19,7 +19,12 @@ pipeline {
                 nexusPolicyEvaluation failBuildOnNetworkError: false, 
                     iqApplication: 'depviz', 
                     iqStage: 'build',                     
-                    iqScanPatterns: [[scanPattern: '**/*.jar']]
+                    iqScanPatterns: [
+                        [scanPattern: '**/dep-viz-*.jar']
+                    ],
+                    callflow: [
+                        enable: true
+                    ]
             }
         }
     }
