@@ -23,7 +23,24 @@ pipeline {
                         [scanPattern: '**/dep-viz-*.jar']
                     ],
                     callflow: [
-                        enable: true
+                        enable: true,
+                        algorithm: 'RTA_PLUS',
+                        properties: [
+                          'bomxray.scan.workspace-resolve.threads': 4
+                        ],
+                        java: [
+                          tool: 'Java 11',
+                          options: [
+                            '-Xmx4G'
+                          ],
+                        ],
+                        entrypointStrategy: [
+                          $class: 'NamedStrategy',
+                          name: 'JAVA_MAIN',
+                          namespaces: [
+                            'ca.objectscape.depviz'
+                          ]
+                        ]
                     ]
             }
         }
