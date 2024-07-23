@@ -37,7 +37,7 @@ jobs:
         application-id: testdata
 #        result-file: result
 #        keep-scan-file: true
-        scan-targets: **/*.jar
+        scan-targets: '**/*.jar'
         debug: false
         ignore-system-errors: true
         ignore-scanning-errors: true
