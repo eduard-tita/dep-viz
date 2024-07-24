@@ -51,7 +51,8 @@ jobs:
     - name: Fetch SBOM
       uses: sonatype/actions/fetch-sbom@v1
       # if: always() && steps.evaluate.outputs.scan-id
-      if: ${{ !cancelled() && steps.evaluate.outputs.scan-id }}
+      # if: ${{ !cancelled() && steps.evaluate.outputs.scan-id }}
+      if: ( success() || failure() ) && steps.evaluate.outputs.scan-id
       with:
         scan-id: ${{ steps.evaluate.outputs.scan-id }}
         application-id: testdata
