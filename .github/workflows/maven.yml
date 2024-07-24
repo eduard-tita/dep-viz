@@ -50,7 +50,7 @@ jobs:
 
     - name: Fetch SBOM
       uses: sonatype/actions/fetch-sbom@v1
-      if: steps.evaluate.outputs.scan-id
+      if: always() && steps.evaluate.outputs.scan-id
       with:
         scan-id: ${{ steps.evaluate.outputs.scan-id }}
         application-id: testdata
