@@ -47,3 +47,15 @@ jobs:
         debug: false
         ignore-system-errors: true
         ignore-scanning-errors: true
+
+    - name: Fetch SBOM
+      uses: sonatype/actions/fetch-sbom@v1
+      if: ${{ steps.evaluate.outputs.scan-id }}
+      with:
+        scan-id: ${{ steps.evaluate.outputs.scan-id }}
+        application-id: testdata
+        iq-server-url: https://sonatype.sonatype.app/platform
+        username: ${{ secrets.SSA_USERNAME }}
+        password: ${{ secrets.SSA_PASSWORD }}
+        sbom-standard: spdx
+        sbom-version: 2.3
