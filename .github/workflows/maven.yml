@@ -25,7 +25,7 @@ jobs:
         java-version: '8'
 
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B --file pom.xml package dependency:copy-dependencies
 
     - name: Setup IQ CLI Action
       id: setup-iq-cli
