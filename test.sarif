@@ -5,7 +5,7 @@
       {
         "tool": {
           "driver": {
-            "name": "Sonatype Evaluate Action",
+            "name": "Sonatype GitHub Actions",
             "version": "1.0.0",
             "organization": "Sonatype. Inc.",
             "informationUri": "https://sonatype.com",
@@ -14,7 +14,8 @@
                 "id": "Security-Critical",
                 "name": "SecurityCritical",
                 "help": {
-                  "text": "Help text"
+                  "text": "Help text",
+                  "markdown": "This is a markdown **formatted** test\nMulti line one."
                 },
                 "shortDescription": {
                   "text": "Security Critical desc"
