@@ -15,10 +15,10 @@
                 "name": "SecurityCritical",
                 "help": {
                   "text": "Help text",
-                  "markdown": "This is a markdown **formatted** test\nMulti line one."
+                  "markdown": "This is a markdown **formatted** test\nMulti line one.\nBlah!"
                 },
                 "shortDescription": {
-                  "text": "Security Critical desc"
+                  "text": "Security Critical - org.apache.logging.log4j:log4j-core@2.15.0"
                 },
                 "fullDescription": {
                   "text": "Security Critical full desc",
