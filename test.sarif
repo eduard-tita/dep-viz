@@ -1,0 +1,67 @@
+{
+    "version": "2.1.0",
+    "$schema": "http://json.schemastore.org/sarif-2.1.0",
+    "runs": [
+      {
+        "tool": {
+          "driver": {
+            "name": "Sonatype Evaluate Action",
+            "version": "1.0.0",
+            "organization": "Sonatype. Inc.",
+            "informationUri": "https://sonatype.com",
+            "rules": [
+              {
+                "id": "Security-Critical",
+                "name": "SecurityCritical",
+                "help": {
+                  "text": "Help text"
+                },
+                "shortDescription": {
+                  "text": "Security Critical desc"
+                },
+                "fullDescription": {
+                  "text": "Security Critical full desc",
+                  "markdown": "Security Critical **full** desc"
+                },
+                "properties": {
+                  "tags": [
+                    "security"
+                  ],
+                  "precision": "high"
+                }
+              }
+            ]
+          }
+        },
+        "artifacts": [],
+        "results": [
+          {
+            "kind": "fail",
+            "level": "error",
+            "ruleId": "Security-Critical",
+            "message": {
+              "text": "Critical risk CVSS score message"
+            },
+            "locations": [
+                {
+                    "physicalLocation": {
+                        "artifactLocation": {
+                            "uri": "pom.xml"
+                        },
+                        "region": {
+                            "startLine": 1
+                        }
+                    },
+                    "logicalLocations": [
+                      {
+                        "fullyQualifiedName": "org.apache.logging.log4j : log4j-core : 2.15.0",
+                        "kind": "module"
+                      }
+                    ]
+                }
+            ]
+          }
+        ]
+      }
+    ]
+}  
