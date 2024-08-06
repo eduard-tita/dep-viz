@@ -1,6 +1,10 @@
 name: Sarif push
 
 on:
+  # Runs on pushes targeting the default branch and docs folder
+  push:
+    branches: ["master"]
+    paths: ['test.sarif']
   workflow_dispatch:
 
 jobs:
