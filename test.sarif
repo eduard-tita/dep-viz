@@ -34,7 +34,6 @@
             ]
           }
         },
-        "artifacts": [],
         "results": [
           {
             "kind": "fail",
@@ -45,6 +44,14 @@
             },
             "locations": [
                 {
+                    "physicalLocation": {
+                        "artifactLocation": {
+                            "uri": "pom.xml"
+                        },
+                        "region": {
+                            "startLine": 1
+                        }
+                    },
                     "logicalLocations": [
                       {
                         "fullyQualifiedName": "org.apache.logging.log4j : log4j-core : 2.15.0",
