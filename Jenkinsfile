@@ -10,7 +10,7 @@ pipeline {
             steps {
                 //sh 'mvn -B -DskipTests clean package dependency:copy-dependencies' 
                 sh 'java -version' 
-                sh 'mvn -B -DskipTests clean package'                 
+                sh 'mvn -B -DskipTests clean package dependency:copy-dependencies'                 
             }
         }
         stage('IQ Policy Evaluation') {
@@ -20,20 +20,10 @@ pipeline {
                     iqApplication: 'depviz', 
                     iqStage: 'build',                     
                     iqScanPatterns: [
-                        [scanPattern: '**/dep-viz-*.jar']
+                        [scanPattern: '**/*.jar']
                     ],
                     callflow: [
                         enable: true,
-                        algorithm: 'RTA_PLUS',
-                        properties: [
-                          'bomxray.scan.workspace-resolve.threads': 4
-                        ],
-                        java: [
-                          tool: 'Java 11',
-                          options: [
-                            '-Xmx4G'
-                          ],
-                        ],
                         entrypointStrategy: [
                           $class: 'NamedStrategy',
                           name: 'JAVA_MAIN',
