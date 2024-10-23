@@ -25,10 +25,9 @@
                   "markdown": "rule:fullDescription:markdown\nSecurity Critical **full** desc"
                 },
                 "properties": {
-                  "tags": [
-                    "security"
-                  ],
-                  "precision": "high"
+                  "tags": ["security"],
+                  "precision": "high",
+                  "security-severity": "critical"
                 }
               }
             ]
@@ -39,9 +38,6 @@
             "kind": "fail",
             "level": "error",
             "ruleId": "Security-Critical",
-            "properties": {
-              "tags": ["critical"]
-            },
             "message": {
               "text": "Critical risk CVSS score message"
             },
