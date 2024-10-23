@@ -27,7 +27,7 @@
                 "properties": {
                   "tags": ["security"],
                   "precision": "high",
-                  "security-severity": "critical"
+                  "security-severity": "9.8"
                 }
               }
             ]
