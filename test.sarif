@@ -11,23 +11,22 @@
             "informationUri": "https://sonatype.com",
             "rules": [
               {
-                "id": "Security-Critical",
-                "name": "SecurityCritical",
+                "id": "Security-High/jackson-databind/CVE-2020-36518/4bc91d5dbb3b470b99f2cfc103be1848",
+                "name": "Security-High violation found for jackson-databind",
                 "help": {
                   "text": "Help text",
-                  "markdown": "rule:help:markdown\nThis is a markdown **formatted** test\nMulti line one.\nBlah!"
+                  "markdown": "**High risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2020-36518 with severity \u003e\u003d 7 (severity \u003d 7.5)\n- Found security vulnerability CVE-2020-36518 with severity \u003c 9 (severity \u003d 7.5)\n\n\n**Vulnerability Description**\n\njackson-databind before 2.13.0 allows a Java StackOverflow exception and denial of service via a large depth of nested objects.\n\n**Explanation**\n\nThe `jackson-databind` package is vulnerable to a Denial of Service (DoS) attack. The `deserialize()` method in the `UntypedObjectDeserializer` and `UntypedObjectDeserializer$Vanilla` classes fails to restrict recursion when deserializing nested untyped or generic objects. A remote attacker who can supply data to be deserialized by an affected application can exploit this vulnerability to cause the JVM to consume all available memory, resulting in a `StackOverflow` exception and ultimately a DoS condition.\n\n*Advisory Deviation Notice*: The Sonatype security research team has discovered that this vulnerability was fixed in versions 2.13.2.1 and 2.12.6.1 and not 2.13.0 as stated in the advisory.\n\n**Detection**\n\nThe application is vulnerable by using this component to deserialize nested generic or untyped objects from untrusted sources."
                 },
                 "shortDescription": {
-                  "text": "rule:shortDescription:text : Security Critical - org.apache.logging.log4j:log4j-core@2.15.0"
+                  "text": "Security-High violation found for jackson-databind"
                 },
                 "fullDescription": {
-                  "text": "Security Critical full desc",
-                  "markdown": "rule:fullDescription:markdown\nSecurity Critical **full** desc"
+                  "text": "Security-High violation found for jackson-databind"
                 },
                 "properties": {
                   "tags": ["security"],
                   "precision": "high",
-                  "security-severity": "9.8"
+                  "security-severity": "7.8"
                 }
               }
             ]
@@ -35,11 +34,9 @@
         },
         "results": [
           {
-            "kind": "fail",
-            "level": "error",
-            "ruleId": "Security-Critical",
+            "ruleId": "Security-High/jackson-databind/CVE-2020-36518/4bc91d5dbb3b470b99f2cfc103be1848",
             "message": {
-              "text": "Critical risk CVSS score message"
+              "text": "Security-High violation found for jackson-databind"
             },
             "locations": [
                 {
@@ -48,12 +45,12 @@
                             "uri": "pom.xml"
                         },
                         "region": {
-                            "startLine": 1
+                            "startLine": 3
                         }
                     },
                     "logicalLocations": [
                       {
-                        "fullyQualifiedName": "org.apache.logging.log4j : log4j-core : 2.15.0",
+                        "fullyQualifiedName": "com.fasterxml.jackson.core : jackson-databind : 2.13.0",
                         "kind": "module"
                       }
                     ]

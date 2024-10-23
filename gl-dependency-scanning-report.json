@@ -1,0 +1,1241 @@
+{
+  "scan": {
+    "end_time": "2024-10-22T12:29:06",
+    "analyzer": {
+      "id": "sonatype-analyzer",
+      "name": "Sonatype Vulnerability Analyzer",
+      "vendor": {
+        "name": "Sonatype"
+      },
+      "version": "1.183.0-01"
+    },
+    "scanner": {
+      "id": "sonatype-scanner",
+      "name": "Sonatype Vulnerability Scanner",
+      "version": "1.183.0-01",
+      "vendor": {
+        "name": "Sonatype"
+      }
+    },
+    "start_time": "2024-10-22T12:28:41",
+    "status": "success",
+    "type": "dependency_scanning"
+  },
+  "version": "15.2.1",
+  "vulnerabilities": [
+    {
+      "id": "960fcd4ca16f4578b2f087560df6a09c",
+      "name": "Security-Medium violation found for bcprov-jdk15",
+      "description": "**Medium risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2013-1624 with severity \u003e\u003d 4 (severity \u003d 4.0)\n- Found security vulnerability CVE-2013-1624 with severity \u003c 7 (severity \u003d 4.0)\n\n\n**Vulnerability Description**\n\nThe TLS implementation in the Bouncy Castle Java library before 1.48 and C# library before 1.8 does not properly consider timing side-channel attacks on a noncompliant MAC check operation during the processing of malformed CBC padding, which allows remote attackers to conduct distinguishing attacks and plaintext-recovery attacks via statistical analysis of timing data for crafted packets, a related issue to CVE-2013-0169.\n\n**Explanation**\n\nWhen using Transport Layer Security (TLS), it is possible for a remote attacker to decrypt encrypted data.\n\n**Detection**\n\nYou are vulnerable if using Transport Layer Security from the package \"org.bouncycastle.crypto.tls\".",
+      "severity": "High",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/CVE-2013-1624) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-960fcd4c",
+          "value": "960fcd4ca16f4578b2f087560df6a09c"
+        },
+        {
+          "type": "cve",
+          "name": "CVE-2013-1624",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2013-1624",
+          "value": "CVE-2013-1624"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-310",
+          "url": "https://cwe.mitre.org/data/definitions/310.html",
+          "value": "310"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id\u003d908428"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "50b43eb53601406fa9c963e2341c889b",
+      "name": "Security-Medium violation found for bcprov-jdk15",
+      "description": "**Medium risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2015-7940 with severity \u003e\u003d 4 (severity \u003d 5.0)\n- Found security vulnerability CVE-2015-7940 with severity \u003c 7 (severity \u003d 5.0)\n\n\n**Vulnerability Description**\n\nThe Bouncy Castle Java library before 1.51 does not validate a point is withing the elliptic curve, which makes it easier for remote attackers to obtain private keys via a series of crafted elliptic curve Diffie Hellman (ECDH) key exchanges, aka an \"invalid curve attack.\"\n\n**Explanation**\n\nThe Bouncy Castle Java library is prone to an invalid curve attack as it does not validate if the supplied point is from a valid elliptical curve before the server computes the common secret key using that point. Remote attackers can exploit this flaw to obtain private keys via a series of crafted Elliptic Curve Diffie-Hellman (ECDH) key exchanges, by forcing the server to compute a common secret using a point outside of the defined curve.\n\nExample: \n\u003e Consider a server using NIST-256 (secp256r1) elliptic curve which uses the equation `E: y^2 \u003d x^3 + ax + b`. This curve has a huge number of elements. \nHowever, if we force the server to compute with a given curve algorithm and the point\n`x: 82794344854243450371984501721340198645022926339504713863786955730156937886079`\n`y: 33552521881581467670836617859178523407344471948513881718969729275859461829010`\n(which does not belong to this NIST curve), we get only five possible results (four points and a point in infinity). \nThe resulting group of this invalid curve has an order 5.\nAs we now know all the points on the invalid elliptic curve E\u0027. If we send the invalid point P\u0027 to the server, the server computes secret sP\u0027. The secret can have only 5 possible values. If we are able to learn the result sP\u0027, we then also learn s1 \u003d s mod 5.\n\u003e\nWe repeat this for points with orders of 7, 11, 13..., until we can compute a Chinese remainder theorem (CRT) and thus learn the server private key.\nFor Bouncy Castle, using NIST-256 curve, we needed about 3300 real server queries. For Oracle JCE, we needed about 17000 real server queries. \n\nReference Link: [http://web-in-security.blogspot.ca/2015/09/practical-invalid-curve-attacks.html](http://web-in-security.blogspot.ca/2015/09/practical-invalid-curve-attacks.html)\n\n**Detection**\n\nThe application will be vulnerable if using \u0027Elliptic Curve\u0027 algorithms for computing signatures, or for constructing secure random number generator mechanisms.\n\nFor example:\n\u003eKey Pair Generation:\n```\nKeyPairGenerator g \u003d KeyPairGenerator.getInstance(\"ECDSA\", \"BC\");\n```\n\nReference Link: [http://www.bouncycastle.org/wiki/display/JA1/Elliptic+Curve+Key+Pair+Generation+and+Key+Factories](http://www.bouncycastle.org/wiki/display/JA1/Elliptic+Curve+Key+Pair+Generation+and+Key+Factories)\n\n\u003eCertificate Creation:\n```\ncertGen.setSignatureAlgorithm(SHA1withECDSA);\n```\n\nReference Link: [http://www.bouncycastle.org/wiki/display/JA1/X.509+Public+Key+Certificate+and+Certification+Request+Generation](http://www.bouncycastle.org/wiki/display/JA1/X.509+Public+Key+Certificate+and+Certification+Request+Generation)\n\nNote: The below algorithms are available for Elliptic Curve (ECDSA):\nSHA1withECDSA\nSHA224withECDSA\nSHA256withECDSA\nSHA384withECDSA\nSHA512withECDSA",
+      "severity": "High",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nNote: If this component is included as a bundled/transitive dependency of another component, there may not be an upgrade path. In this instance, we recommend contacting the maintainers who included the vulnerable package. Alternatively, we recommend investigating alternative components or a potential mitigating control.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/CVE-2015-7940) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-50b43eb5",
+          "value": "50b43eb53601406fa9c963e2341c889b"
+        },
+        {
+          "type": "cve",
+          "name": "CVE-2015-7940",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2015-7940",
+          "value": "CVE-2015-7940"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-200",
+          "url": "https://cwe.mitre.org/data/definitions/200.html",
+          "value": "200"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-310",
+          "url": "https://cwe.mitre.org/data/definitions/310.html",
+          "value": "310"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id\u003d1276272"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "95d43fe379fe4988b5324f4a333856e9",
+      "name": "Security-Medium violation found for bcprov-jdk15",
+      "description": "**Medium risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2016-1000339 with severity \u003e\u003d 4 (severity \u003d 5.3)\n- Found security vulnerability CVE-2016-1000339 with severity \u003c 7 (severity \u003d 5.3)\n\n\n**Vulnerability Description**\n\nIn the Bouncy Castle JCE Provider version 1.55 and earlier the primary engine class used for AES was AESFastEngine. Due to the highly table driven approach used in the algorithm it turns out that if the data channel on the CPU can be monitored the lookup table accesses are sufficient to leak information on the AES key being used. There was also a leak in AESEngine although it was substantially less. AESEngine has been modified to remove any signs of leakage (testing carried out on Intel X86-64) and is now the primary AES class for the BC JCE provider from 1.56. Use of AESFastEngine is now only recommended where otherwise deemed appropriate.\n\n**Explanation**\n\n`BouncyCastle` package is vulnerable to side-channel attack. The `AES` class uses AESFastEngine for encryption\\decryption of the data. AESFastEngine uses a large static table implementation. If an attacker can observe the data accesses by the CPU, that attacker could use this information to infer information about the key used to initialize the cipher.\n\n**Detection**\n\nThe application is vulnerable by using this component.",
+      "severity": "High",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/CVE-2016-1000339) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-95d43fe3",
+          "value": "95d43fe379fe4988b5324f4a333856e9"
+        },
+        {
+          "type": "cve",
+          "name": "CVE-2016-1000339",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2016-1000339",
+          "value": "CVE-2016-1000339"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-310",
+          "url": "https://cwe.mitre.org/data/definitions/310.html",
+          "value": "310"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://www.bouncycastle.org/releasenotes.html"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "4d5821bcc6fa4b56a22227090dd7f290",
+      "name": "Security-Medium violation found for bcprov-jdk15",
+      "description": "**Medium risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2016-1000341 with severity \u003e\u003d 4 (severity \u003d 5.9)\n- Found security vulnerability CVE-2016-1000341 with severity \u003c 7 (severity \u003d 5.9)\n\n\n**Vulnerability Description**\n\nIn the Bouncy Castle JCE Provider version 1.55 and earlier DSA signature generation is vulnerable to timing attack. Where timings can be closely observed for the generation of signatures, the lack of blinding in 1.55, or earlier, may allow an attacker to gain information about the signature\u0027s k value and ultimately the private value as well.\n\n**Explanation**\n\n`BouncyCastle` is vulnerable to a Timing Attack. The `generateSignature()` function in the `DSASigner.java` file allows the per message key (the `k` value in the DSA algorithm) to be predictable while generating DSA signatures. A remote attacker can exploit this vulnerability to determine the `k` value by closely observing the timings for the generation of signatures, allowing the attacker to deduce the signer\u0027s private key.\n\n**Detection**\n\nThe application is vulnerable by using this component.",
+      "severity": "High",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/CVE-2016-1000341) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-4d5821bc",
+          "value": "4d5821bcc6fa4b56a22227090dd7f290"
+        },
+        {
+          "type": "cve",
+          "name": "CVE-2016-1000341",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2016-1000341",
+          "value": "CVE-2016-1000341"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-361",
+          "url": "https://cwe.mitre.org/data/definitions/361.html",
+          "value": "361"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://www.bouncycastle.org/releasenotes.html"
+        },
+        {
+          "url": "https://rdist.root.org/2010/11/19/dsa-requirements-for-random-k-value/"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "a26c94e4258548ee9fe80fe0c23669c3",
+      "name": "Security-Medium violation found for bcprov-jdk15",
+      "description": "**Medium risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2016-1000345 with severity \u003e\u003d 4 (severity \u003d 5.9)\n- Found security vulnerability CVE-2016-1000345 with severity \u003c 7 (severity \u003d 5.9)\n\n\n**Vulnerability Description**\n\nIn the Bouncy Castle JCE Provider version 1.55 and earlier the DHIES/ECIES CBC mode vulnerable to padding oracle attack. For BC 1.55 and older, in an environment where timings can be easily observed, it is possible with enough observations to identify when the decryption is failing due to padding.\n\n**Explanation**\n\n`BouncyCastle` package is vulnerable to padding oracle attack. The `engineDoFinal()` function in the `IESCipher` class raises a special exception when the padding is not correct. Because the timings of these special exceptions can be predicted, it is potentially possible to determine when a request fails due to bad padding.  An attacker can exploit this flaw to get indirect information about the secret key or message by creating a lot of fake ciphertexts and sending them to the server.\n\n**Detection**\n\nThe application is vulnerable by using this component.",
+      "severity": "High",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/CVE-2016-1000345) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-a26c94e4",
+          "value": "a26c94e4258548ee9fe80fe0c23669c3"
+        },
+        {
+          "type": "cve",
+          "name": "CVE-2016-1000345",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2016-1000345",
+          "value": "CVE-2016-1000345"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-361",
+          "url": "https://cwe.mitre.org/data/definitions/361.html",
+          "value": "361"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://www.bouncycastle.org/releasenotes.html"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "710203c18d7d4172af2f4ede5546611a",
+      "name": "Security-Medium violation found for bcprov-jdk15",
+      "description": "**Medium risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2020-0187 with severity \u003e\u003d 4 (severity \u003d 5.5)\n- Found security vulnerability CVE-2020-0187 with severity \u003c 7 (severity \u003d 5.5)\n\n\n**Vulnerability Description**\n\nIn engineSetMode of BaseBlockCipher.java, there is a possible incorrect cryptographic algorithm chosen due to an incomplete comparison. This could lead to local information disclosure with no additional execution privileges needed. User interaction is not needed for exploitation.Product: AndroidVersions: Android-10Android ID: A-148517383\n\n**Explanation**\n\nThe `bcprov-jdk15on` package is vulnerable to Information Disclosure. The `engineSetMode` method in `BaseBlockCipher.class` and the `engineSetMode` method in `JCEBlockCipher.class` fails to interpret the algorithm to be used when trying to protect the information with `AES/GCM-SIV/NoPadding`. As a consequence of this misinterpretation, the application could instead use the less secure algorithm `AES/GCM/NoPadding`.  A local attacker could abuse this behavior to disclose sensitive information without a privileged security context over the victim application.\n\n*Research Notice:* The Sonatype security research team discovered that this vulnerability affects a wider set of cryptographic algorithms aside from `GCM`. These are referred in `sonatype-2020-0770`.\n\n**Detection**\n\nThe application is vulnerable by using this component.",
+      "severity": "High",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nNote: If this component is included as a bundled/transitive dependency of another component, there may not be an upgrade path. In this instance, we recommend contacting the maintainers who included the vulnerable package. Alternatively, we recommend investigating alternative components or a potential mitigating control.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/CVE-2020-0187) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-710203c1",
+          "value": "710203c18d7d4172af2f4ede5546611a"
+        },
+        {
+          "type": "cve",
+          "name": "CVE-2020-0187",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2020-0187",
+          "value": "CVE-2020-0187"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-310",
+          "url": "https://cwe.mitre.org/data/definitions/310.html",
+          "value": "310"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://android.googlesource.com/platform/external/bouncycastle/+/14ceec126e49f2f4748f0d540be820515cc725a6"
+        },
+        {
+          "url": "https://source.android.com/security/bulletin/pixel/2020-06-01"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "b0adade2fd55468f916ce87f0f9f8efd",
+      "name": "Security-Medium violation found for bcprov-jdk15",
+      "description": "**Medium risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2020-26939 with severity \u003e\u003d 4 (severity \u003d 5.3)\n- Found security vulnerability CVE-2020-26939 with severity \u003c 7 (severity \u003d 5.3)\n\n\n**Vulnerability Description**\n\nIn Legion of the Bouncy Castle BC before 1.61 and BC-FJA before 1.0.1.2, attackers can obtain sensitive information about a private exponent because of Observable Differences in Behavior to Error Inputs. This occurs in org.bouncycastle.crypto.encodings.OAEPEncoding. Sending invalid ciphertext that decrypts to a short payload in the OAEP Decoder could result in the throwing of an early exception, potentially leaking some information about the private exponent of the RSA private key performing the encryption.\n\n**Explanation**\n\nThe Bouncy Castle Crypto package is vulnerable to Timing Attacks. The `decodeBlock` method in `OAEPEncoding.class`, `decodeBlockOrRandom` and `decodeBlock` methods in `PKCS1Encoding.class`, and `convertOutput` method in `RSACoreEngine.class` do not properly maintain constant time when decoding inputs of various lengths, specifically short inputs for the OAEP Decoder. An attacker can exploit this by observing the difference in time taken to decode inputs of various lengths in order to expose private encryption keys.\n\n**Detection**\n\nThe application is vulnerable by using this component.",
+      "severity": "High",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nNote: If this component is included as a bundled/transitive dependency of another component, there may not be an upgrade path. In this instance, we recommend contacting the maintainers who included the vulnerable package. Alternatively, we recommend investigating alternative components or a potential mitigating control.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/CVE-2020-26939) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-b0adade2",
+          "value": "b0adade2fd55468f916ce87f0f9f8efd"
+        },
+        {
+          "type": "cve",
+          "name": "CVE-2020-26939",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2020-26939",
+          "value": "CVE-2020-26939"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-203",
+          "url": "https://cwe.mitre.org/data/definitions/203.html",
+          "value": "203"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://github.com/bcgit/bc-java/wiki/CVE-2020-26939"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "ba4fe0bd98b34191af24226ef072458d",
+      "name": "Security-Medium violation found for bcprov-jdk15",
+      "description": "**Medium risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2023-33201 with severity \u003e\u003d 4 (severity \u003d 5.3)\n- Found security vulnerability CVE-2023-33201 with severity \u003c 7 (severity \u003d 5.3)\n\n\n**Vulnerability Description**\n\nBouncy Castle For Java before 1.74 is affected by an LDAP injection vulnerability. The vulnerability only affects applications that use an LDAP CertStore from Bouncy Castle to validate X.509 certificates. During the certificate validation process, Bouncy Castle inserts the certificate\u0027s Subject Name into an LDAP search filter without any escaping, which leads to an LDAP injection vulnerability.\n\n**Explanation**\n\nBouncy Castle is vulnerable to LDAP Injection attacks due to Improper Certificate Validation. The `parseDN()` method of the `X509LDAPCertStoreSpi` class propagates X.509 certificate subject names to an LDAP search filter without proper sanitization. A remote attacker can exploit this vulnerability by supplying a certificate with a subject name that contains LDAP-related metacharacters. Execution of the modified query may expose the attacker to sensitive information contained within the application\u0027s LDAP CertStore.\n\n**Detection**\n\nThe application is vulnerable by using this component if it uses the LDAP CertStore to validate X.509 certificates.\n\nReference: \u003chttps://github.com/bcgit/bc-java/wiki/CVE-2023-33201\u003e",
+      "severity": "High",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nNote: If this component is included as a bundled/transitive dependency of another component, there may not be an upgrade path. In this instance, we recommend contacting the maintainers who included the vulnerable package. Alternatively, we recommend investigating alternative components or a potential mitigating control.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/CVE-2023-33201) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-ba4fe0bd",
+          "value": "ba4fe0bd98b34191af24226ef072458d"
+        },
+        {
+          "type": "cve",
+          "name": "CVE-2023-33201",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2023-33201",
+          "value": "CVE-2023-33201"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-295",
+          "url": "https://cwe.mitre.org/data/definitions/295.html",
+          "value": "295"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://github.com/bcgit/bc-java/wiki/CVE-2023-33201"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "0504e960d9864232b682b3af33ad6d6d",
+      "name": "Security-Medium violation found for bcprov-jdk15",
+      "description": "**Medium risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2024-30171 with severity \u003e\u003d 4 (severity \u003d 5.9)\n- Found security vulnerability CVE-2024-30171 with severity \u003c 7 (severity \u003d 5.9)\n\n\n**Vulnerability Description**\n\nAn issue was discovered in Bouncy Castle Java TLS API and JSSE Provider before 1.78. Timing-based leakage may occur in RSA based handshakes because of exception processing.\n\n**Explanation**\n\nMultiple `bouncycastle` components as vulnerable to a Timing Attack (\"a timing variant of Bleichenbacher called Marvin Attack\"). The `safeDecryptPreMasterSecret()` method in the `BcDefaultTlsCredentialedDecryptor.class` file when calling operations from `TlsRsaKeyExchange.class` induces an observable timing discrepancy depending on the output of the RSA algorithm. An attacker could exploit this flaw to potentially deduce the secrets based on the exceptions that occur during the decryption workflow.\n\n**Note:** This vulnerability is also tracked as [CVE-2024-20952](https://github.com/bcgit/bc-java/issues/1528#issuecomment-1896674881) in Oracle products such as Java.\n\n\n**Detection**\n\nThe application is vulnerable by using this component.",
+      "severity": "High",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nNote: If this component is included as a bundled/transitive dependency of another component, there may not be an upgrade path. In this instance, we recommend contacting the maintainers who included the vulnerable package. Alternatively, we recommend investigating alternative components or a potential mitigating control.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/CVE-2024-30171) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-0504e960",
+          "value": "0504e960d9864232b682b3af33ad6d6d"
+        },
+        {
+          "type": "cve",
+          "name": "CVE-2024-30171",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-30171",
+          "value": "CVE-2024-30171"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-203",
+          "url": "https://cwe.mitre.org/data/definitions/203.html",
+          "value": "203"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://github.com/bcgit/bc-java/issues/1528"
+        },
+        {
+          "url": "https://www.bouncycastle.org/releasenotes.html#:~:text\u003dduring%20parameter%20evaluation.-,CVE%2D2024%2D30171,-%2D%20Possible%20timing%20based"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "c33b1662c9d14e75a5a19c15f01d1455",
+      "name": "Security-Medium violation found for bcprov-jdk15",
+      "description": "**Medium risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability sonatype-2009-0035 with severity \u003e\u003d 4 (severity \u003d 5.6)\n- Found security vulnerability sonatype-2009-0035 with severity \u003c 7 (severity \u003d 5.6)\n\n\n**Explanation**\n\nBouncyCastle contains an Unexpected Sign Extension vulnerability. The `init()` method in the `HC256Engine` and `HC128Engine` classes fail to perform certain validations regarding sign extensions and byte swapping. An attacker can leverage this vulnerability to potentially brute-force and derive sensitive values or perform various other attacks.\n\n\n**Detection**\n\nThe application is vulnerable by using this component with the HC-128 or HC-256 ciphers.",
+      "severity": "High",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/sonatype-2009-0035) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-c33b1662",
+          "value": "c33b1662c9d14e75a5a19c15f01d1455"
+        },
+        {
+          "type": "sonatype",
+          "name": "sonatype-2009-0035",
+          "url": "https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/sonatype-2009-0035",
+          "value": "sonatype-2009-0035"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-194",
+          "url": "https://cwe.mitre.org/data/definitions/194.html",
+          "value": "194"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://www.bouncycastle.org/releasenotes.html"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "64a48c6956184bcabb54f1032ca9e918",
+      "name": "Security-Medium violation found for bcprov-jdk15",
+      "description": "**Medium risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability sonatype-2020-0770 with severity \u003e\u003d 4 (severity \u003d 5.5)\n- Found security vulnerability sonatype-2020-0770 with severity \u003c 7 (severity \u003d 5.5)\n\n\n**Explanation**\n\nThe bouncycastle package is vulnerable to Cryptographic Issues. The `engineSetMode` method in `BaseBlockCipher.class` fails to interpret the block cipher mode to be used when trying to protect the information with the established ones. As a consequence of this misinterpretation, the application could instead use a less secure mode than the intended.  An attacker could abuse this behavior to disclose sensitive information without a privileged security context over the victim application.\n\n*Research Notice:* This issue is an extension of CVE-2020-0187 addressing additional block cipher modes aside from the `GCM` mode that Android fixed in their bouncycastle variation.\n\n**Detection**\n\nThis application is vulnerable by using this component along with using a block cipher and selecting a mode other than `OFB` or `CFB`.",
+      "severity": "High",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nNote: If this component is included as a bundled/transitive dependency of another component, there may not be an upgrade path. In this instance, we recommend contacting the maintainers who included the vulnerable package. Alternatively, we recommend investigating alternative components or a potential mitigating control.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/sonatype-2020-0770) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-64a48c69",
+          "value": "64a48c6956184bcabb54f1032ca9e918"
+        },
+        {
+          "type": "sonatype",
+          "name": "sonatype-2020-0770",
+          "url": "https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/sonatype-2020-0770",
+          "value": "sonatype-2020-0770"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-310",
+          "url": "https://cwe.mitre.org/data/definitions/310.html",
+          "value": "310"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://github.com/bcgit/bc-java/commit/b462106a57b7f5079bea0ac95ca12105755d2c0f"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "68d05b76533747cdb5e66b4c514f413c",
+      "name": "Security-High violation found for bcprov-jdk15",
+      "description": "**High risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2016-1000338 with severity \u003e\u003d 7 (severity \u003d 7.5)\n- Found security vulnerability CVE-2016-1000338 with severity \u003c 9 (severity \u003d 7.5)\n\n\n**Vulnerability Description**\n\nIn Bouncy Castle JCE Provider version 1.55 and earlier the DSA does not fully validate ASN.1 encoding of signature on verification. It is possible to inject extra elements in the sequence making up the signature and still have it validate, which in some cases may allow the introduction of \u0027invisible\u0027 data into a signed structure.\n\n**Explanation**\n\nDSA does not fully validate ASN.1 encoding of signature on verification. It is possible to inject extra elements in the sequence making up the signature and still have it validate, which in some cases may allow the introduction of \"invisible\" data into a signed structure.\r\nReference: https://www.bouncycastle.org/releasenotes.html\n\n**Detection**\n\nThe application is vulnerable by using this component.",
+      "severity": "Critical",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/CVE-2016-1000338) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-68d05b76",
+          "value": "68d05b76533747cdb5e66b4c514f413c"
+        },
+        {
+          "type": "cve",
+          "name": "CVE-2016-1000338",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2016-1000338",
+          "value": "CVE-2016-1000338"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-347",
+          "url": "https://cwe.mitre.org/data/definitions/347.html",
+          "value": "347"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://www.bouncycastle.org/releasenotes.html"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "c3446fa66c40485c94de0b3271384c98",
+      "name": "Security-High violation found for bcprov-jdk15",
+      "description": "**High risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2016-1000343 with severity \u003e\u003d 7 (severity \u003d 7.5)\n- Found security vulnerability CVE-2016-1000343 with severity \u003c 9 (severity \u003d 7.5)\n\n\n**Vulnerability Description**\n\nIn the Bouncy Castle JCE Provider version 1.55 and earlier the DSA key pair generator generates a weak private key if used with default values. If the JCA key pair generator is not explicitly initialised with DSA parameters, 1.55 and earlier generates a private value assuming a 1024 bit key size. In earlier releases this can be dealt with by explicitly passing parameters to the key pair generator.\n\n**Explanation**\n\n`BouncyCastle` package is vulnerable to weak key generation when using DSA for encryption and/or signing. The generateKeyPair()` method in the `KeyPairGeneratorSp` class uses a small value when generating the private key. This makes it easier for an attacker to brute-force the private key, which will result in the decryption of information or impersonation of the vulnerable server.\n\n**Detection**\n\nThe application is vulnerable by using this component.",
+      "severity": "Critical",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/CVE-2016-1000343) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-c3446fa6",
+          "value": "c3446fa66c40485c94de0b3271384c98"
+        },
+        {
+          "type": "cve",
+          "name": "CVE-2016-1000343",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2016-1000343",
+          "value": "CVE-2016-1000343"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-310",
+          "url": "https://cwe.mitre.org/data/definitions/310.html",
+          "value": "310"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://www.bouncycastle.org/releasenotes.html"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "35f61ed266d346a68cf1c17dfe53a1bf",
+      "name": "Security-High violation found for bcprov-jdk15",
+      "description": "**High risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2024-29857 with severity \u003e\u003d 7 (severity \u003d 7.5)\n- Found security vulnerability CVE-2024-29857 with severity \u003c 9 (severity \u003d 7.5)\n\n\n**Vulnerability Description**\n\nAn issue was discovered in ECCurve.java and ECCurve.cs in Bouncy Castle Java (BC Java) before 1.78, BC Java LTS before 2.73.6, BC-FJA before 1.0.2.5, and BC C# .Net before 2.3.1. Importing an EC certificate with crafted F2m parameters can lead to excessive CPU consumption during the evaluation of the curve parameters.\n\n**Explanation**\n\nThe `org.bouncycastle` packages listed below are vulnerable to Denial of Service (DoS) attacks. The `solveQuadraticEquation()` method of the `ECCurve$AbstractF2m` class does not properly validate  `F2m` parameters when importing a digital certificate containing Elliptic Curve (EC) keys. A remote attacker can exploit this vulnerability by supplying a specially crafted certificate with an invalid `m` parameter. Parsing such certificate may increase CPU usage potentially leading to a crash in the affected system.\n\n***Vulnerable Package(s)***:\n- **maven : org.bouncycastle : bc-fips**\n- **maven : org.bouncycastle : bc-fips-debug**\n- **maven : org.bouncycastle : bcprov-debug-jdk14**\n- **maven : org.bouncycastle : bcprov-debug-jdk15to18**\n- **maven : org.bouncycastle : bcprov-debug-jdk18on**\n- **maven : org.bouncycastle : bcprov-ext-debug-jdk14**\n- **maven : org.bouncycastle : bcprov-ext-debug-jdk15on**\n- **maven : org.bouncycastle : bcprov-ext-debug-jdk15to18**\n- **maven : org.bouncycastle : bcprov-ext-debug-jdk18on**\n- **maven : org.bouncycastle : bcprov-ext-jdk14**\n- **maven : org.bouncycastle : bcprov-ext-jdk15on**\n- **maven : org.bouncycastle : bcprov-ext-jdk15to18**\n- **maven : org.bouncycastle : bcprov-ext-jdk16**\n- **maven : org.bouncycastle : bcprov-ext-jdk18on**\n- **maven : org.bouncycastle : bcprov-jdk12**\n- **maven : org.bouncycastle : bcprov-jdk14**\n- **maven : org.bouncycastle : bcprov-jdk15**\n- **maven : org.bouncycastle : bcprov-jdk15+**\n- **maven : org.bouncycastle : bcprov-jdk15on**\n- **maven : org.bouncycastle : bcprov-jdk15to18**\n- **maven : org.bouncycastle : bcprov-jdk16**\n- **maven : org.bouncycastle : bcprov-jdk18on**\n\n**Detection**\n\nThe application is vulnerable by using this component.",
+      "severity": "Critical",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nNote: If this component is included as a bundled/transitive dependency of another component, there may not be an upgrade path. In this instance, we recommend contacting the maintainers who included the vulnerable package. Alternatively, we recommend investigating alternative components or a potential mitigating control.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/CVE-2024-29857) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-35f61ed2",
+          "value": "35f61ed266d346a68cf1c17dfe53a1bf"
+        },
+        {
+          "type": "cve",
+          "name": "CVE-2024-29857",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-29857",
+          "value": "CVE-2024-29857"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-125",
+          "url": "https://cwe.mitre.org/data/definitions/125.html",
+          "value": "125"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://www.bouncycastle.org/releasenotes.html#:~:text\u003dthe%20following%20CVEs%3A-,CVE%2D2024%2D29857,-%2D%20Importing%20an%20EC"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "26dd2d325b634889a4ebbc79c6bc76eb",
+      "name": "Security-High violation found for bcprov-jdk15",
+      "description": "**High risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability sonatype-2024-0946 with severity \u003e\u003d 7 (severity \u003d 7.7)\n- Found security vulnerability sonatype-2024-0946 with severity \u003c 9 (severity \u003d 7.7)\n\n\n**Explanation**\n\nMultiple `bouncycastle` components are vulnerable to Improper Validation of Certificate with Host Mismatch. The files (classes) listed below improperly resolve hostname when endpoint identification is enabled but an SSL socket is not created with an explicit hostname (which is the case with `HttpsURLConnection`). In such scenarios, hostname verification can be performed against a DNS-resolved IP address leading to SSL certificate verification errors.\n\n***Vulnerable File(s) and Function(s)***:\n- **maven : org.bouncycastle : bctls-fips**\n  - org/bouncycastle/jsse/provider/ProvSSLSocketDirect.class\n  - org/bouncycastle/jsse/provider/ProvSSLSocketWrap.class\n- **maven : org.bouncycastle : bctls-jdk15to18**\n  - org/bouncycastle/jsse/provider/ProvSSLSocketDirect.class\n  - org/bouncycastle/jsse/provider/ProvSSLSocketWrap.class\n\n**Detection**\n\nThe application is vulnerable by using this component.",
+      "severity": "Critical",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nNote: If this component is included as a bundled/transitive dependency of another component, there may not be an upgrade path. In this instance, we recommend contacting the maintainers who included the vulnerable package. Alternatively, we recommend investigating alternative components or a potential mitigating control.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/sonatype-2024-0946) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-26dd2d32",
+          "value": "26dd2d325b634889a4ebbc79c6bc76eb"
+        },
+        {
+          "type": "sonatype",
+          "name": "sonatype-2024-0946",
+          "url": "https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/sonatype-2024-0946",
+          "value": "sonatype-2024-0946"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-297",
+          "url": "https://cwe.mitre.org/data/definitions/297.html",
+          "value": "297"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://www.bouncycastle.org/releasenotes.html#:~:text\u003dCVE%2D2024%2D301XX%20%2D%20When%20endpoint%20identification%20is%20enabled%20in%20the%20BCJSSE%20and%20an%20SSL%20socket%20is%20not%20created%20with%20an%20explicit%20hostname%20(as%20happens%20with%20HttpsURLConnection)%2C%20hostname%20verification%20could%20be%20performed%20against%20a%20DNS%2Dresolved%20IP%20address.%20This%20has%20been%20fixed."
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "983a212936ed47b79856f4db8f523cc1",
+      "name": "Security-High violation found for jackson-core",
+      "description": "**High risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability sonatype-2022-6438 with severity \u003e\u003d 7 (severity \u003d 7.5)\n- Found security vulnerability sonatype-2022-6438 with severity \u003c 9 (severity \u003d 7.5)\n\n\n**Explanation**\n\nThe `jackson-core` package is vulnerable to a Denial of Service (DoS) attack. The methods in the classes listed below fail to restrict input size when performing numeric type conversions. A remote attacker can exploit this vulnerability by causing the application to deserialize data containing certain numeric types with large values. Deserializing many of the aforementioned objects may cause the application to exhaust all available resources, resulting in a DoS condition.\n\n*Vulnerable File(s) and Function(s)*:\n\ncom/fasterxml/jackson/core/base/ParserBase.class\n- _parseSlowInt()\n- convertNumberToBigDecimal()\n\ncom/fasterxml/jackson/core/base/ParserMinimalBase.class\n- getValueAsDouble()\n\ncom/fasterxml/jackson/core/util/TextBuffer.class\n- contentsAsDecimal()\n- contentsAsDouble()\n- contentsAsFloat()\n\n**Detection**\n\nThe application is vulnerable by using this component if it does not restrict user-supplied numeric input values prior to deserialization.",
+      "severity": "Critical",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nNote: If this component is included as a bundled/transitive dependency of another component, there may not be an upgrade path. In this instance, we recommend contacting the maintainers who included the vulnerable package. Alternatively, we recommend investigating alternative components or a potential mitigating control.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/sonatype-2022-6438) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-983a2129",
+          "value": "983a212936ed47b79856f4db8f523cc1"
+        },
+        {
+          "type": "sonatype",
+          "name": "sonatype-2022-6438",
+          "url": "https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/sonatype-2022-6438",
+          "value": "sonatype-2022-6438"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-400",
+          "url": "https://cwe.mitre.org/data/definitions/400.html",
+          "value": "400"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://github.com/FasterXML/jackson-core/pull/827"
+        },
+        {
+          "url": "https://github.com/FasterXML/jackson-core/pull/846"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "com.fasterxml.jackson.core : jackson-core : 2.13.0"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "jackson-core"
+          },
+          "version": "2.13.0"
+        }
+      }
+    },
+    {
+      "id": "4bc91d5dbb3b470b99f2cfc103be1848",
+      "name": "Security-High violation found for jackson-databind",
+      "description": "**High risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2020-36518 with severity \u003e\u003d 7 (severity \u003d 7.5)\n- Found security vulnerability CVE-2020-36518 with severity \u003c 9 (severity \u003d 7.5)\n\n\n**Vulnerability Description**\n\njackson-databind before 2.13.0 allows a Java StackOverflow exception and denial of service via a large depth of nested objects.\n\n**Explanation**\n\nThe `jackson-databind` package is vulnerable to a Denial of Service (DoS) attack. The `deserialize()` method in the `UntypedObjectDeserializer` and `UntypedObjectDeserializer$Vanilla` classes fails to restrict recursion when deserializing nested untyped or generic objects. A remote attacker who can supply data to be deserialized by an affected application can exploit this vulnerability to cause the JVM to consume all available memory, resulting in a `StackOverflow` exception and ultimately a DoS condition.\n\n*Advisory Deviation Notice*: The Sonatype security research team has discovered that this vulnerability was fixed in versions 2.13.2.1 and 2.12.6.1 and not 2.13.0 as stated in the advisory.\n\n**Detection**\n\nThe application is vulnerable by using this component to deserialize nested generic or untyped objects from untrusted sources.",
+      "severity": "Critical",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nNote: If this component is included as a bundled/transitive dependency of another component, there may not be an upgrade path. In this instance, we recommend contacting the maintainers who included the vulnerable package. Alternatively, we recommend investigating alternative components or a potential mitigating control.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/CVE-2020-36518) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-4bc91d5d",
+          "value": "4bc91d5dbb3b470b99f2cfc103be1848"
+        },
+        {
+          "type": "cve",
+          "name": "CVE-2020-36518",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2020-36518",
+          "value": "CVE-2020-36518"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-787",
+          "url": "https://cwe.mitre.org/data/definitions/787.html",
+          "value": "787"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://github.com/FasterXML/jackson-databind/issues/2816"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "com.fasterxml.jackson.core : jackson-databind : 2.13.0"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "jackson-databind"
+          },
+          "version": "2.13.0"
+        }
+      }
+    },
+    {
+      "id": "80a16d63720f47679a39bccd4c03a9bf",
+      "name": "Security-High violation found for jackson-databind",
+      "description": "**High risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2022-42003 with severity \u003e\u003d 7 (severity \u003d 7.5)\n- Found security vulnerability CVE-2022-42003 with severity \u003c 9 (severity \u003d 7.5)\n\n\n**Vulnerability Description**\n\nIn FasterXML jackson-databind before versions 2.13.4.1 and 2.12.17.1, resource exhaustion can occur because of a lack of a check in primitive value deserializers to avoid deep wrapper array nesting, when the UNWRAP_SINGLE_VALUE_ARRAYS feature is enabled.\n\n**Explanation**\n\nThe `jackson-databind` package is vulnerable to Denial of Service (DoS) attacks. The methods listed below in the `StdDeserializer` class fail to properly detect deeply-nested arrays in primitive value de-serializers, which might allow malicious actors to exhaust system resources. An attacker can exploit this vulnerability by supplying an affected instance with specially-crafted data to cause a DoS condition.\n\n*Vulnerable Method(s)*:\n\ncom/fasterxml/jackson/databind/deser/std/StdDeserializer.class\n- _deserializeWrappedValue()\n- _parseBooleanPrimitive()\n- _parseBytePrimitive()\n- _parseShortPrimitive()\n- _parseIntPrimitive()\n- _parseLongPrimitive()\n- _parseFloatPrimitive()\n- _parseDoublePrimitive()\n- _parseDateFromArray()\n\n**Detection**\n\nThe application is vulnerable by using this component and enabling the `UNWRAP_SINGLE_VALUE_ARRAYS` feature.",
+      "severity": "Critical",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nNote: If this component is included as a bundled/transitive dependency of another component, there may not be an upgrade path. In this instance, we recommend contacting the maintainers who included the vulnerable package. Alternatively, we recommend investigating alternative components or a potential mitigating control.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/CVE-2022-42003) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-80a16d63",
+          "value": "80a16d63720f47679a39bccd4c03a9bf"
+        },
+        {
+          "type": "cve",
+          "name": "CVE-2022-42003",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-42003",
+          "value": "CVE-2022-42003"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-502",
+          "url": "https://cwe.mitre.org/data/definitions/502.html",
+          "value": "502"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://github.com/FasterXML/jackson-databind/issues/3590"
+        },
+        {
+          "url": "https://bugs.chromium.org/p/oss-fuzz/issues/detail?id\u003d51020"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "com.fasterxml.jackson.core : jackson-databind : 2.13.0"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "jackson-databind"
+          },
+          "version": "2.13.0"
+        }
+      }
+    },
+    {
+      "id": "af96018b8b444778a490b3e5495f0164",
+      "name": "Security-High violation found for jackson-databind",
+      "description": "**High risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability CVE-2022-42004 with severity \u003e\u003d 7 (severity \u003d 7.5)\n- Found security vulnerability CVE-2022-42004 with severity \u003c 9 (severity \u003d 7.5)\n\n\n**Vulnerability Description**\n\nIn FasterXML jackson-databind before 2.13.4, resource exhaustion can occur because of a lack of a check in BeanDeserializer._deserializeFromArray to prevent use of deeply nested arrays. An application is vulnerable only with certain customized choices for deserialization.\n\n**Explanation**\n\nThe `jackson-databind` package is vulnerable to Denial of Service (DoS) attacks. The `_deserializeFromArray()` method in the `BeanDeserializer` class fails to properly detect deeply-nested arrays, which might allow malicious actors to exhaust system resources. An attacker can exploit this vulnerability by supplying an affected instance with specially-crafted data to cause a DoS condition.\n\n**Detection**\n\nThe application is vulnerable by using this component with certain customized choices for deserialization.",
+      "severity": "Critical",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nNote: If this component is included as a bundled/transitive dependency of another component, there may not be an upgrade path. In this instance, we recommend contacting the maintainers who included the vulnerable package. Alternatively, we recommend investigating alternative components or a potential mitigating control.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/CVE-2022-42004) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-af96018b",
+          "value": "af96018b8b444778a490b3e5495f0164"
+        },
+        {
+          "type": "cve",
+          "name": "CVE-2022-42004",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-42004",
+          "value": "CVE-2022-42004"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-502",
+          "url": "https://cwe.mitre.org/data/definitions/502.html",
+          "value": "502"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://github.com/FasterXML/jackson-databind/issues/3582"
+        },
+        {
+          "url": "https://bugs.chromium.org/p/oss-fuzz/issues/detail?id\u003d50490"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "com.fasterxml.jackson.core : jackson-databind : 2.13.0"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "jackson-databind"
+          },
+          "version": "2.13.0"
+        }
+      }
+    },
+    {
+      "id": "d2e05e5f6bc848959665a1a5ed6c3671",
+      "name": "Security-High violation found for jackson-databind",
+      "description": "**High risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability sonatype-2021-4682 with severity \u003e\u003d 7 (severity \u003d 7.5)\n- Found security vulnerability sonatype-2021-4682 with severity \u003c 9 (severity \u003d 7.5)\n\n\n**Explanation**\n\nThe `jackson-databind` package is vulnerable to a Denial of Service (DoS) attack. The `readExternal()` method in the `NodeSerialization` class fails to restrict allocation when `JsonNode` objects are serialized/deserialized by the JDK. Consequently, since the first `4` bytes of serialized `JsonNode` objects indicate the size of the object\u0027s contents, certain payloads with an actual byte-length of `4` may cause the application to allocate a byte array of `Integer.MAX_VALUE` in size (2Gb). A remote attacker can exploit this vulnerability to cause the application to consume large amounts of available heap memory by submitting a payload that exploits this issue.\n\n**Detection**\n\nThe application is vulnerable by using this component if it uses the JDK to serialize and deserialize `JsonNode` objects.\n\nReference: [https://github.com/FasterXML/jackson-databind/issues/3328](https://github.com/FasterXML/jackson-databind/issues/3328)",
+      "severity": "Critical",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nNote: If this component is included as a bundled/transitive dependency of another component, there may not be an upgrade path. In this instance, we recommend contacting the maintainers who included the vulnerable package. Alternatively, we recommend investigating alternative components or a potential mitigating control.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/sonatype-2021-4682) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-d2e05e5f",
+          "value": "d2e05e5f6bc848959665a1a5ed6c3671"
+        },
+        {
+          "type": "sonatype",
+          "name": "sonatype-2021-4682",
+          "url": "https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/sonatype-2021-4682",
+          "value": "sonatype-2021-4682"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-400",
+          "url": "https://cwe.mitre.org/data/definitions/400.html",
+          "value": "400"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://github.com/FasterXML/jackson-databind/issues/3328"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "com.fasterxml.jackson.core : jackson-databind : 2.13.0"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "jackson-databind"
+          },
+          "version": "2.13.0"
+        }
+      }
+    },
+    {
+      "id": "d2105deb8e5b4b078c785d995ae7c97c",
+      "name": "Architecture-Quality violation found for jackson-annotations",
+      "description": "**Version is unpopular and old** is in violation for the following reason(s):\n\n- Relative popularity was \u003c\u003d 20% (relative popularity \u003d 14%)\n- Found component older than 1 years\n",
+      "severity": "Low",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-d2105deb",
+          "value": "d2105deb8e5b4b078c785d995ae7c97c"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "com.fasterxml.jackson.core : jackson-annotations : 2.13.0"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "jackson-annotations"
+          },
+          "version": "2.13.0"
+        }
+      }
+    },
+    {
+      "id": "6854ed704e4a401083252463816548cc",
+      "name": "Architecture-Quality violation found for jackson-core",
+      "description": "**Version is unpopular and old** is in violation for the following reason(s):\n\n- Relative popularity was \u003c\u003d 20% (relative popularity \u003d 17%)\n- Found component older than 1 years\n",
+      "severity": "Low",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-6854ed70",
+          "value": "6854ed704e4a401083252463816548cc"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "com.fasterxml.jackson.core : jackson-core : 2.13.0"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "jackson-core"
+          },
+          "version": "2.13.0"
+        }
+      }
+    },
+    {
+      "id": "b0281ea7b46a4fbf81668e95bfe61f04",
+      "name": "Architecture-Quality violation found for jackson-databind",
+      "description": "**Version is unpopular and old** is in violation for the following reason(s):\n\n- Relative popularity was \u003c\u003d 20% (relative popularity \u003d 15%)\n- Found component older than 1 years\n",
+      "severity": "Low",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-b0281ea7",
+          "value": "b0281ea7b46a4fbf81668e95bfe61f04"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "com.fasterxml.jackson.core : jackson-databind : 2.13.0"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "jackson-databind"
+          },
+          "version": "2.13.0"
+        }
+      }
+    },
+    {
+      "id": "66368caa135b4f8697a3952dc1091944",
+      "name": "Architecture-Divest violation found for bcprov-jdk15",
+      "description": "**Version is Old** is in violation for the following reason(s):\n\n- Found component older than 3 years\n",
+      "severity": "Low",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-66368caa",
+          "value": "66368caa135b4f8697a3952dc1091944"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    },
+    {
+      "id": "587806e119d64cd4a5de6af482d14833",
+      "name": "Architecture-Divest violation found for jackson-annotations",
+      "description": "**Version is Old** is in violation for the following reason(s):\n\n- Found component older than 3 years\n",
+      "severity": "Low",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-587806e1",
+          "value": "587806e119d64cd4a5de6af482d14833"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "com.fasterxml.jackson.core : jackson-annotations : 2.13.0"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "jackson-annotations"
+          },
+          "version": "2.13.0"
+        }
+      }
+    },
+    {
+      "id": "68fd1f636085411a800e5609da82a177",
+      "name": "Architecture-Divest violation found for jackson-core",
+      "description": "**Version is Old** is in violation for the following reason(s):\n\n- Found component older than 3 years\n",
+      "severity": "Low",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-68fd1f63",
+          "value": "68fd1f636085411a800e5609da82a177"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "com.fasterxml.jackson.core : jackson-core : 2.13.0"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "jackson-core"
+          },
+          "version": "2.13.0"
+        }
+      }
+    },
+    {
+      "id": "5cc6f22d848d418185b85f7ad6051a50",
+      "name": "Architecture-Divest violation found for jackson-databind",
+      "description": "**Version is Old** is in violation for the following reason(s):\n\n- Found component older than 3 years\n",
+      "severity": "Low",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-5cc6f22d",
+          "value": "5cc6f22d848d418185b85f7ad6051a50"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "com.fasterxml.jackson.core : jackson-databind : 2.13.0"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "jackson-databind"
+          },
+          "version": "2.13.0"
+        }
+      }
+    },
+    {
+      "id": "a734d236e8aa4d5780d4234bea765ee3",
+      "name": "Security-Low violation found for bcprov-jdk15",
+      "description": "**Low risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability sonatype-2019-0673 with severity \u003e\u003d 0 (severity \u003d 3.7)\n- Found security vulnerability sonatype-2019-0673 with severity \u003c 4 (severity \u003d 3.7)\n\n\n**Explanation**\n\nBouncy Castle is vulnerable to Denial of Service (DoS). The `Dump.class` file utilises `FileInputStreams` objects when reading from user-provided files, but fails to close these streams properly. This can lead to resource leaks, potentially enabling an attacker to exhaust resources by providing a crafted file as an input to the application, thereby triggering a DoS condition. \n\n**Detection**\n\nThe application is vulnerable by using this component.",
+      "severity": "Low",
+      "solution": "We recommend upgrading to a version of this component that is not vulnerable to this specific issue.\n\nNote: If this component is included as a bundled/transitive dependency of another component, there may not be an upgrade path. In this instance, we recommend contacting the maintainers who included the vulnerable package. Alternatively, we recommend investigating alternative components or a potential mitigating control.\n\nCheck the [vulnerability details page](https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/sonatype-2019-0673) for the latest details about this issue and possible recommendations.",
+      "identifiers": [
+        {
+          "type": "sonatype",
+          "name": "internal-sid-a734d236",
+          "value": "a734d236e8aa4d5780d4234bea765ee3"
+        },
+        {
+          "type": "sonatype",
+          "name": "sonatype-2019-0673",
+          "url": "https://sonatype.sonatype.app/platform/assets/index.html#/vulnerabilities/sonatype-2019-0673",
+          "value": "sonatype-2019-0673"
+        },
+        {
+          "type": "cwe",
+          "name": "CWE-400",
+          "url": "https://cwe.mitre.org/data/definitions/400.html",
+          "value": "400"
+        }
+      ],
+      "links": [
+        {
+          "url": "https://github.com/bcgit/bc-java/issues/634"
+        }
+      ],
+      "details": {
+        "vulnerable_package": {
+          "name": "Vulnerable Package",
+          "type": "text",
+          "value": "bouncycastle : bcprov-jdk15 : 140"
+        }
+      },
+      "location": {
+        "file": "pom.xml",
+        "dependency": {
+          "package": {
+            "name": "bcprov-jdk15"
+          },
+          "version": "140"
+        }
+      }
+    }
+  ]
+}
