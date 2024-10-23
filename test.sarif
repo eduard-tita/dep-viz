@@ -61,10 +61,10 @@
                 {
                     "physicalLocation": {
                         "artifactLocation": {
-                            "uri": "pom2.xml"
+                            "uri": "unknown"
                         },
                         "region": {
-                            "startLine": 3
+                            "startLine": 1
                         }
                     },
                     "logicalLocations": [
@@ -88,7 +88,7 @@
                     "uri": "pom.xml"
                   },
                   "region": {
-                    "startLine": 3
+                    "startLine": 1
                   }
                 },
                 "logicalLocations": [
