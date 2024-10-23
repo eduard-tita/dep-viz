@@ -11,7 +11,7 @@
             "informationUri": "https://sonatype.com",
             "rules": [
               {
-                "id": "Security-High/jackson-databind/CVE-2020-36518/4bc91d5dbb3b470b99f2cfc103be1848",
+                "id": "Security-High/jackson-databind/4bc91d5dbb3b470b99f2cfc103be1848",
                 "name": "Security-High violation found for jackson-databind",
                 "help": {
                   "text": "Help text",
@@ -26,7 +26,26 @@
                 "properties": {
                   "tags": ["security"],
                   "precision": "high",
-                  "security-severity": "7.8"
+                  "security-severity": "7.5"
+                }
+              },
+              {
+                "id": "Security-Critical/jackson-core/983a212936ed47b79856f4db8f523cc1",
+                "name": "Security-Critical violation found for jackson-core",
+                "help": {
+                  "text": "Help text",
+                  "markdown": "**High risk CVSS score** is in violation for the following reason(s):\n\n- Found security vulnerability sonatype-2022-6438 with severity \u003e\u003d 7 (severity \u003d 7.5)\n- Found security vulnerability sonatype-2022-6438 with severity \u003c 9 (severity \u003d 7.5)\n\n\n**Explanation**\n\nThe `jackson-core` package is vulnerable to a Denial of Service (DoS) attack. The methods in the classes listed below fail to restrict input size when performing numeric type conversions. A remote attacker can exploit this vulnerability by causing the application to deserialize data containing certain numeric types with large values. Deserializing many of the aforementioned objects may cause the application to exhaust all available resources, resulting in a DoS condition.\n\n*Vulnerable File(s) and Function(s)*:\n\ncom/fasterxml/jackson/core/base/ParserBase.class\n- _parseSlowInt()\n- convertNumberToBigDecimal()\n\ncom/fasterxml/jackson/core/base/ParserMinimalBase.class\n- getValueAsDouble()\n\ncom/fasterxml/jackson/core/util/TextBuffer.class\n- contentsAsDecimal()\n- contentsAsDouble()\n- contentsAsFloat()\n\n**Detection**\n\nThe application is vulnerable by using this component if it does not restrict user-supplied numeric input values prior to deserialization."
+                },
+                "shortDescription": {
+                  "text": "Security-Critical violation found for jackson-core"
+                },
+                "fullDescription": {
+                  "text": "Security-Critical violation found for jackson-core"
+                },
+                "properties": {
+                  "tags": ["security"],
+                  "precision": "high",
+                  "security-severity": "9.5"
                 }
               }
             ]
@@ -34,7 +53,7 @@
         },
         "results": [
           {
-            "ruleId": "Security-High/jackson-databind/CVE-2020-36518/4bc91d5dbb3b470b99f2cfc103be1848",
+            "ruleId": "Security-High/jackson-databind/4bc91d5dbb3b470b99f2cfc103be1848",
             "message": {
               "text": "Security-High violation found for jackson-databind"
             },
@@ -55,6 +74,30 @@
                       }
                     ]
                 }
+            ]
+          },
+          {
+            "ruleId": "Security-Critical/jackson-core/983a212936ed47b79856f4db8f523cc1",
+            "message": {
+              "text": "Security-Critical violation found for jackson-core"
+            },
+            "locations": [
+              {
+                "physicalLocation": {
+                  "artifactLocation": {
+                    "uri": "pom.xml"
+                  },
+                  "region": {
+                    "startLine": 3
+                  }
+                },
+                "logicalLocations": [
+                  {
+                    "fullyQualifiedName": "com.fasterxml.jackson.core : jackson-core : 2.13.0",
+                    "kind": "module"
+                  }
+                ]
+              }
             ]
           }
         ]
