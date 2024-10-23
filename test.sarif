@@ -37,8 +37,11 @@
         "results": [
           {
             "kind": "fail",
-            "level": "critical",
+            "level": "error",
             "ruleId": "Security-Critical",
+            "properties": {
+              "tags": ["critical"]
+            },
             "message": {
               "text": "Critical risk CVSS score message"
             },
