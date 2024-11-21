@@ -27,13 +27,15 @@ jobs:
         
     - name: Run IQ CLI
       id: evaluate
-      uses: sonatype/actions/evaluate@v1
+      uses: sonatype/actions/evaluate@v1.0.6-beta
       with:
         iq-server-url: https://sonatype.sonatype.app/platform
         username: ${{ secrets.SSA_USERNAME }}
         password: ${{ secrets.SSA_PASSWORD }}
         application-id: testdata
         scan-targets: '**/*.jar'
+        sarif-file: 'new-file.sarif'
+        upload-sarif-file: true
 
     - name: Fetch SBOM
       uses: sonatype/actions/fetch-sbom@v1
